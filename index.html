@@ -100,18 +100,49 @@ const scenes = [
     ],
   },
   {
+    id: "scan_bundle", label: "Bundles found",
+    steps: [
+      { who: "user", text: "3dCKe6RwZfiCqJUYBAt4Sy7MKN7HCx8FoUr6Q7Wpump", delay: 0 },
+      { who: "bot", delay: 600, content: { type: "progress", stage: 1 } },
+      { who: "bot", delay: 1000, replace: true, content: { type: "progress", stage: 3 } },
+      { who: "bot", delay: 1400, replace: true, content: { type: "progress", stage: 4 } },
+      {
+        who: "bot", delay: 2400, replace: true,
+        content: {
+          type: "report",
+          header: { name: "SolElite", symbol: "SELITE", mint: "3dCKe6RwZfiC...Wpump", level: "MEDIUM", score: 41, emoji: "\u26a0\ufe0f" },
+          sections: [
+            { title: "Market", lines: ["Price: `$0.00824`", "MCap: $824K \u00b7 Liq: $31.2K", "Vol 24h: $142K \u00b7 \ud83d\udfe2 +68.4%"] },
+            { title: "Contract", lines: ["\u2705 Mint: *Revoked*", "\u2705 Freeze: *Revoked*", "\u26a0\ufe0f LP: *Unlocked*"] },
+            { title: "Holders", lines: ["\u26a0\ufe0f Top 10: *38.7%*", "\u274c Largest: *12.4%* (`7xPm...2kTz`)", "\u2705 Dev: *0.0%*"] },
+            { title: "Bundles", lines: ["\u274c Bundled Supply: *18.6%*", "\u274c Clusters: *4*", "\u274c Fresh Wallets: *67%*", "\u26a0\ufe0f Snipers: *2*"] },
+          ],
+          flags: [
+            "\u274c 4 wallet clusters hold 18.6% \u2014 coordinated buying detected",
+            "\u274c 67% of top holders are fresh wallets (<24h old)",
+            "\u26a0\ufe0f 2 snipers bought within first 3 blocks",
+            "\u26a0\ufe0f LP unlocked \u2014 dev can pull liquidity",
+          ],
+          warnings: ["\u26a0\ufe0f Bundle strength: 4/5 \u2014 high coordination", "\u26a0\ufe0f MCap/Liq ratio: 26x \u2014 thin liquidity"],
+          verdict: "\u26a0\ufe0f *MEDIUM RISK \u2014 Significant bundle activity detected.* Trade with caution.",
+          buttons: [["Buy anyway (SELITE)", "\ud83d\udd14 Alert"], ["Bundle Map"], ["DexScreener \u2197", "RugCheck \u2197"], ["Rescan", "Share"], ["Back"]],
+        },
+      },
+    ],
+  },
+  {
     id: "buy", label: "Buy flow",
     steps: [
       { who: "bot", delay: 0, content: { type: "text", text: "Buy FARTCOIN\n\nPrice: $0.1748\nBalance: 2.847 SOL\n\nHow much SOL?", buttons: [["0.1 SOL", "0.5 SOL"], ["1.0 SOL", "5.0 SOL"], ["Custom Amount"], ["DexScreener \u2197", "Back"]] }},
       { who: "user", text: "1.0 SOL", isButton: true, delay: 1200 },
       { who: "bot", delay: 1800, content: { type: "text", text: "\u23f3 *Buying token...*\n\nAmount: 1.0 SOL\nSlippage: 5.0%\nFee: 0.8%" }},
-      { who: "bot", delay: 3200, replace: true, content: { type: "text", text: "\u2705 *Trade confirmed on-chain!*\n\nBought: 452.52 FARTCOIN\nPaid: 1.0 SOL ($79.83)\nFee: 0.008 SOL\n\n\ud83d\udd17 `4xKm...9vRz` \u2197", buttons: [["\ud83d\udcca Positions", "Set TP/SL"], ["\ud83d\udccb Orders", "Back"]] }},
+      { who: "bot", delay: 3200, replace: true, content: { type: "text", text: "\u2705 *Trade confirmed on-chain!*\n\nBought: 479.16 FARTCOIN\nPaid: 1.0 SOL ($84.42)\nFee: 0.008 SOL\n\n\ud83d\udd17 `4xKm...9vRz` \u2197", buttons: [["\ud83d\udcca Positions", "Set TP/SL"], ["\ud83d\udccb Orders", "Back"]] }},
     ],
   },
   {
     id: "portfolio", label: "Portfolio",
     steps: [
-      { who: "bot", delay: 0, content: { type: "text", text: "*Portfolio*\n\n\ud83d\udcb0 *4.219 SOL* ($337.52)\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n*FARTCOIN*  \u00b7  452.52 tokens\n\ud83d\udcb0 $97.42 (1.220 SOL)\n\ud83d\udfe2 +22.0% (+$17.59)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n*DOGE420*  \u00b7  892,041.00 tokens\n\ud83d\udcb0 $17.62 (0.220 SOL)\n\ud83d\udd34 -12.4% (-$2.48)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n*AIBOT*  \u00b7  3,200,000.00 tokens\n\ud83d\udcb0 $186.40 (2.330 SOL)\n\ud83d\udfe2 +385.4% (+$148.00)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nTotal: $337.52 (4.219 SOL)\n\ud83d\udfe2 Unrealized: +$163.11 (+1.56 SOL)\n\ud83d\udfe2 Realized: +$203.78 (+2.43 SOL)", buttons: [["Sell FARTCOIN", "Chart \u2197"], ["Sell DOGE420", "Chart \u2197"], ["Sell AIBOT", "Chart \u2197"], ["Trade History", "Tax Export"], ["\ud83d\udd04 Refresh", "\ud83d\udd17 Sync Wallet"], ["Back"]] }},
+      { who: "bot", delay: 0, content: { type: "text", text: "*Portfolio*\n\n\ud83d\udcb0 *3.63 SOL* ($306.44)\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n*FARTCOIN*  \u00b7  479.16 tokens\n\ud83d\udcb0 $102.12 (1.210 SOL)\n\ud83d\udfe2 +21.0% (+$17.70)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n*DOGE420*  \u00b7  892,041.00 tokens\n\ud83d\udcb0 $17.73 (0.210 SOL)\n\ud83d\udd34 -12.5% (-$2.53)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n*AIBOT*  \u00b7  3,200,000.00 tokens\n\ud83d\udcb0 $186.59 (2.210 SOL)\n\ud83d\udfe2 +380.5% (+$147.74)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nTotal: $306.44 (3.63 SOL)\n\ud83d\udfe2 Unrealized: +$162.91 (+1.93 SOL)\n\ud83d\udfe2 Realized: +$203.78 (+2.43 SOL)", buttons: [["Sell FARTCOIN", "Chart \u2197"], ["Sell DOGE420", "Chart \u2197"], ["Sell AIBOT", "Chart \u2197"], ["Trade History", "Tax Export"], ["\ud83d\udd04 Refresh", "\ud83d\udd17 Sync Wallet"], ["Back"]] }},
     ],
   },
   {
@@ -127,7 +158,7 @@ const scenes = [
       { who: "bot", delay: 1000, content: { type: "text", text: "\u23f3 *Scanning wallet...*\n\nFetching transaction history..." }},
       { who: "bot", delay: 3000, replace: true, content: {
         type: "text",
-        text: "*Wallet Scan Report*\n\nWallet: `2URMeFWK677r...nBLfB`\nScan: 2026-02-11\nPeriod: 2026-01-01 \u2192 2026-02-11\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcc8 *Overview*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nTotal trades: *47*\nBuys: 28 | Sells: 19\n\nInvested: 8.41 SOL\nReceived: 10.84 SOL\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udfe2 *Realized P&L*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nSOL: *+2.43* SOL\nUSD: *+$203.78*\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udccb *Tax Info*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nLong-term trades (>1 year): 0\nLong-term P&L: 0.00 SOL\nShort-term events: 19\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udce6 *Top Holdings*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n*FARTCOIN*\n  Remaining: 452 | Invested: 1.00 SOL\n  Realized: +0.23 SOL\n\n*AIBOT*\n  Remaining: 3,200,000 | Invested: 0.48 SOL\n  Realized: +1.36 SOL\n\n*DOGE420*\n  Remaining: 892,000 | Invested: 0.24 SOL\n  Realized: -0.03 SOL",
+        text: "*Wallet Scan Report*\n\nWallet: `2URMeFWK677r...nBLfB`\nScan: 2026-02-11\nPeriod: 2026-01-01 \u2192 2026-02-11\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcc8 *Overview*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nTotal trades: *47*\nBuys: 28 | Sells: 19\n\nInvested: 8.41 SOL\nReceived: 10.84 SOL\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udfe2 *Realized P&L*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nSOL: *+2.43* SOL\nUSD: *+$203.78*\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udccb *Tax Info*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nLong-term trades (>1 year): 0\nLong-term P&L: 0.00 SOL\nShort-term events: 19\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udce6 *Top Holdings*\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n*FARTCOIN*\n  Remaining: 479 | Invested: 1.00 SOL\n  Realized: +0.23 SOL\n\n*AIBOT*\n  Remaining: 3,200,000 | Invested: 0.48 SOL\n  Realized: +1.36 SOL\n\n*DOGE420*\n  Remaining: 892,000 | Invested: 0.24 SOL\n  Realized: -0.03 SOL",
         buttons: [["CSV Export", "Detail Report"], ["Rescan", "Menu"]],
       }},
     ],
@@ -283,12 +314,14 @@ function PhoneDemo({ compact }) {
               {typ&&<div style={{alignSelf:"flex-start",padding:"6px 11px",borderRadius:"10px 10px 10px 3px",background:TG.msgIn,animation:"sU .2s ease-out"}}><TypingDots/></div>}
             </div>
             {/* input */}
-            <div style={{display:"flex",alignItems:"center",gap:4,padding:"6px 8px 20px",background:TG.header,borderTop:"1px solid "+TG.border}}>
-              <div style={{width:24,height:24,borderRadius:12,background:TG.accent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#fff",flexShrink:0}}>{"\u2630"}</div>
-              <div style={{fontSize:13,color:TG.textDim}}>{"\ud83d\udcce"}</div>
-              <div style={{flex:1,height:30,borderRadius:15,padding:"0 12px",background:TG.inputBg,display:"flex",alignItems:"center",color:TG.textDim,fontSize:12,border:"1px solid "+TG.border}}>Write a message...</div>
-              <div style={{fontSize:13,color:TG.textDim}}>{"\ud83d\ude00"}</div>
-              <div style={{fontSize:13,color:TG.textDim}}>{"\ud83c\udfa4"}</div>
+            <div style={{display:"flex",alignItems:"center",gap:6,padding:"6px 8px 20px",background:TG.header,borderTop:"1px solid "+TG.border}}>
+              <div style={{width:28,height:28,borderRadius:14,background:TG.accent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#fff",flexShrink:0,fontWeight:700}}>{"\u2630"}</div>
+              <div style={{flex:1,height:33,borderRadius:17,background:TG.inputBg,display:"flex",alignItems:"center",border:"1px solid "+TG.border,overflow:"hidden"}}>
+                <span style={{flex:1,padding:"0 12px",color:TG.textDim,fontSize:12}}>Message</span>
+                <div style={{padding:"0 8px",fontSize:14,color:TG.textDim,opacity:0.5}}>{"\ud83d\ude42"}</div>
+                <div style={{padding:"0 8px 0 2px",display:"flex",alignItems:"center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15.5 11V5a3.5 3.5 0 10-7 0v6" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/><rect x="5" y="10" width="14" height="9" rx="4" stroke="#6C7883" strokeWidth="1.8"/><path d="M12 15v2" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/></svg></div>
+              </div>
+              <div style={{width:28,height:28,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" stroke="#6C7883" strokeWidth="1.8"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/><path d="M12 19v3m-3 0h6" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/></svg></div>
             </div>
           </div>
         </div>
