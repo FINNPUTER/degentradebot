@@ -36,7 +36,7 @@ const scenes = [
         buttons: [
           ["\ud83d\udcb8 Buy", "\ud83d\udcca Positions", "\ud83d\udc1d Withdraw"],
           ["\ud83d\udccb Orders", "\ud83d\udd04 Copy Trade", "\ud83d\udd14 Alerts"],
-          ["\ud83d\udd0d Safety Scan", "\ud83c\udfc6 Leaderboard"],
+          ["\ud83d\udd0d Safety Scan"],
           ["\ud83d\udc5b Wallet", "\ud83e\udd1d Referral"],
           ["\ud83d\udccb Tax Export", "\u2699\ufe0f Settings"],
           ["\ud83d\udd04 Refresh"],
@@ -251,9 +251,9 @@ function PhoneDemo({ compact }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:0}}>
       {/* ── SCENE SELECTOR: luxury tab bar ── */}
-      <div style={{position:"relative",width:"100%",maxWidth:pW+40}}>
-        <div style={{position:"absolute",left:0,top:0,bottom:0,width:20,background:"linear-gradient(90deg,#060A0F,transparent)",zIndex:2,pointerEvents:"none"}}/>
-        <div style={{position:"absolute",right:0,top:0,bottom:0,width:20,background:"linear-gradient(270deg,#060A0F,transparent)",zIndex:2,pointerEvents:"none"}}/>
+      <div className="dt-tab-wrap" style={{position:"relative",width:"100%"}}>
+        <div className="dt-tab-fade" style={{position:"absolute",left:0,top:0,bottom:0,width:20,background:"linear-gradient(90deg,#060A0F,transparent)",zIndex:2,pointerEvents:"none",display:"none"}}/>
+        <div className="dt-tab-fade" style={{position:"absolute",right:0,top:0,bottom:0,width:20,background:"linear-gradient(270deg,#060A0F,transparent)",zIndex:2,pointerEvents:"none",display:"none"}}/>
         <div className="dt-tab-bar" style={{
         background:"rgba(255,255,255,0.02)",
         border:"1px solid rgba(255,255,255,0.04)",
@@ -552,9 +552,9 @@ function DegenTradeLanding() {
         .dt-nav-link{color:#6C7883;text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s;white-space:nowrap}
         .dt-hero{padding:80px 32px 40px}
         .dt-phone-wrap{transform:scale(1);transform-origin:top center}
-        .dt-tab-bar{display:flex;align-items:center;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;scrollbar-width:none}
+        .dt-tab-bar{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;scrollbar-width:none}
         .dt-tab-bar::-webkit-scrollbar{display:none}
-        .dt-tab-bar button{scroll-snap-align:center;white-space:nowrap;flex-shrink:0}
+        .dt-tab-bar button{white-space:nowrap;flex-shrink:0}
         .dt-stats-item{flex:1 1 160px;text-align:center;padding:24px 12px}
         .dt-stats-val{font-size:28px}
         .dt-features{padding:80px 24px}
@@ -570,8 +570,10 @@ function DegenTradeLanding() {
           .dt-nav-link{display:none}
           .dt-hero{padding:48px 18px 24px}
           .dt-phone-wrap{transform:scale(0.85);margin-top:-16px;margin-bottom:-32px}
-          .dt-tab-bar{padding:0 4px}
-          .dt-tab-bar button{padding:7px 10px !important;font-size:10px !important}
+          .dt-tab-bar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;justify-content:flex-start}
+          .dt-tab-fade{display:block !important}
+          .dt-tab-wrap{max-width:100vw;overflow:hidden}
+          .dt-tab-bar button{padding:7px 10px !important;font-size:10px !important;scroll-snap-align:center}
           .dt-stats-item{flex:1 1 45%;padding:18px 8px}
           .dt-stats-val{font-size:22px}
           .dt-features{padding:48px 16px}
