@@ -251,11 +251,14 @@ function PhoneDemo({ compact }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:0}}>
       {/* ── SCENE SELECTOR: luxury tab bar ── */}
-      <div className="dt-tab-bar" style={{
+      <div style={{position:"relative",width:"100%",maxWidth:pW+40}}>
+        <div style={{position:"absolute",left:0,top:0,bottom:0,width:20,background:"linear-gradient(90deg,#060A0F,transparent)",zIndex:2,pointerEvents:"none"}}/>
+        <div style={{position:"absolute",right:0,top:0,bottom:0,width:20,background:"linear-gradient(270deg,#060A0F,transparent)",zIndex:2,pointerEvents:"none"}}/>
+        <div className="dt-tab-bar" style={{
         background:"rgba(255,255,255,0.02)",
         border:"1px solid rgba(255,255,255,0.04)",
         borderRadius:12,padding:3,marginBottom:20,
-        backdropFilter:"blur(12px)",
+        backdropFilter:"blur(12px)",width:"100%",
       }}>
         {scenes.map((s,i)=>{
           const active=sc===i;
@@ -269,6 +272,7 @@ function PhoneDemo({ compact }) {
             position:"relative",
           }}>{s.label}</button>;
         })}
+      </div>
       </div>
 
       {/* ── PHONE FRAME ── */}
@@ -314,14 +318,12 @@ function PhoneDemo({ compact }) {
               {typ&&<div style={{alignSelf:"flex-start",padding:"6px 11px",borderRadius:"10px 10px 10px 3px",background:TG.msgIn,animation:"sU .2s ease-out"}}><TypingDots/></div>}
             </div>
             {/* input */}
-            <div style={{display:"flex",alignItems:"center",gap:6,padding:"6px 8px 20px",background:TG.header,borderTop:"1px solid "+TG.border}}>
-              <div style={{width:28,height:28,borderRadius:14,background:TG.accent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#fff",flexShrink:0,fontWeight:700}}>{"\u2630"}</div>
-              <div style={{flex:1,height:33,borderRadius:17,background:TG.inputBg,display:"flex",alignItems:"center",border:"1px solid "+TG.border,overflow:"hidden"}}>
-                <span style={{flex:1,padding:"0 12px",color:TG.textDim,fontSize:12}}>Message</span>
-                <div style={{padding:"0 8px",fontSize:14,color:TG.textDim,opacity:0.5}}>{"\ud83d\ude42"}</div>
-                <div style={{padding:"0 8px 0 2px",display:"flex",alignItems:"center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15.5 11V5a3.5 3.5 0 10-7 0v6" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/><rect x="5" y="10" width="14" height="9" rx="4" stroke="#6C7883" strokeWidth="1.8"/><path d="M12 15v2" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/></svg></div>
+            <div style={{display:"flex",alignItems:"center",gap:8,padding:"6px 8px 20px",background:TG.header,borderTop:"1px solid "+TG.border}}>
+              <div style={{width:30,height:30,borderRadius:15,background:TG.accent,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg></div>
+              <div style={{flexShrink:0,display:"flex",alignItems:"center"}}><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" stroke="#6C7883" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+              <div style={{flex:1,height:33,borderRadius:17,background:TG.inputBg,display:"flex",alignItems:"center",border:"1px solid "+TG.border}}>
+                <span style={{flex:1,padding:"0 12px",color:TG.textDim,fontSize:12}}>Write a message...</span>
               </div>
-              <div style={{width:28,height:28,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" stroke="#6C7883" strokeWidth="1.8"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/><path d="M12 19v3m-3 0h6" stroke="#6C7883" strokeWidth="1.8" strokeLinecap="round"/></svg></div>
             </div>
           </div>
         </div>
@@ -550,14 +552,15 @@ function DegenTradeLanding() {
         .dt-nav-link{color:#6C7883;text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s;white-space:nowrap}
         .dt-hero{padding:80px 32px 40px}
         .dt-phone-wrap{transform:scale(1);transform-origin:top center}
-        .dt-tab-bar{display:inline-flex;align-items:center;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+        .dt-tab-bar{display:flex;align-items:center;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;scrollbar-width:none}
         .dt-tab-bar::-webkit-scrollbar{display:none}
+        .dt-tab-bar button{scroll-snap-align:center;white-space:nowrap;flex-shrink:0}
         .dt-stats-item{flex:1 1 160px;text-align:center;padding:24px 12px}
         .dt-stats-val{font-size:28px}
         .dt-features{padding:80px 24px}
         .dt-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
         .dt-cta-inner{padding:52px 36px}
-        .dt-footer-cols{display:flex;flex-wrap:wrap;gap:40px;margin-bottom:28px}
+        .dt-footer-cols{display:grid;grid-template-columns:1fr auto auto auto;gap:40px;margin-bottom:28px}
         .dt-legal-modal{max-width:680px;max-height:85vh}
         .dt-legal-body{padding:24px 28px}
         
@@ -567,21 +570,26 @@ function DegenTradeLanding() {
           .dt-nav-link{display:none}
           .dt-hero{padding:48px 18px 24px}
           .dt-phone-wrap{transform:scale(0.85);margin-top:-16px;margin-bottom:-32px}
-          .dt-tab-bar{padding:0 8px}
+          .dt-tab-bar{padding:0 4px}
+          .dt-tab-bar button{padding:7px 10px !important;font-size:10px !important}
           .dt-stats-item{flex:1 1 45%;padding:18px 8px}
           .dt-stats-val{font-size:22px}
           .dt-features{padding:48px 16px}
           .dt-features-grid{grid-template-columns:1fr}
           .dt-cta-inner{padding:36px 20px}
-          .dt-footer-cols{gap:24px}
+          .dt-footer-cols{gap:20px;grid-template-columns:1fr 1fr;row-gap:24px}
+          .dt-footer-desc{grid-column:1/-1}
+          .dt-footer-bottom{flex-direction:column !important;text-align:center;gap:4px !important}
           .dt-legal-modal{max-height:90vh;margin:8px;border-radius:16px}
           .dt-legal-body{padding:18px 18px}
         }
         @media(max-width:380px){
           .dt-phone-wrap{transform:scale(0.78);margin-top:-24px;margin-bottom:-48px}
           .dt-hero{padding:36px 12px 16px}
+          .dt-tab-bar button{padding:6px 8px !important;font-size:9px !important}
           .dt-stats-item{padding:14px 6px}
           .dt-stats-val{font-size:20px}
+          .dt-footer-cols{grid-template-columns:1fr 1fr}
         }
       `}</style>
 
@@ -685,7 +693,7 @@ function DegenTradeLanding() {
       <footer style={{position:"relative",zIndex:1,borderTop:"1px solid rgba(255,255,255,0.04)",padding:"32px 20px 24px"}}>
         <div style={{maxWidth:1060,margin:"0 auto"}}>
           <div className="dt-footer-cols">
-            <div style={{flex:"1 1 200px"}}>
+            <div className="dt-footer-desc" style={{}}>
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
                 <img src={LOGO_SM} alt="" style={{width:22,height:22,borderRadius:5,opacity:0.6}}/>
                 <span style={{fontWeight:700,fontSize:14,color:"#F5F5F5"}}>DegenTrade</span>
@@ -715,7 +723,7 @@ function DegenTradeLanding() {
               </div>
             </div>
           </div>
-          <div style={{borderTop:"1px solid rgba(255,255,255,0.04)",paddingTop:16,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+          <div className="dt-footer-bottom" style={{borderTop:"1px solid rgba(255,255,255,0.04)",paddingTop:16,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
             <span style={{fontSize:11,color:"#2D3748"}}>{"\u00a9"} 2026 DegenTrade. All rights reserved.</span>
             <span style={{fontSize:11,color:"#2D3748"}}>Trading cryptocurrencies involves significant risk of loss.</span>
           </div>
