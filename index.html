@@ -425,6 +425,38 @@ function PhoneDemo({ compact }) {
 function DegenTradeLanding() {
   const [scrollY, setScrollY] = useState(0);
   const [legal, setLegal] = useState(null);
+  const [page, setPage] = useState("home");
+  const glowRef = useRef(null);
+
+  // Scroll reveal observer
+  useEffect(()=>{
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.dt-reveal').forEach(el=>obs.observe(el));
+    return ()=>obs.disconnect();
+  },[page]);
+
+  // Mouse glow
+  useEffect(()=>{
+    const h=e=>{if(glowRef.current){glowRef.current.style.left=e.clientX+'px';glowRef.current.style.top=e.clientY+'px';}};
+    window.addEventListener('mousemove',h);
+    return ()=>window.removeEventListener('mousemove',h);
+  },[]);
+
+  // Particles
+  const Particles=()=>{
+    const ps=useRef(Array.from({length:20},(_,i)=>({
+      id:i,x:Math.random()*100,y:Math.random()*100,s:Math.random()*2+1,d:Math.random()*20+10,
+      dx:(Math.random()-0.5)*200,dy:(Math.random()-0.5)*200
+    }))).current;
+    return <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,overflow:"hidden"}}>
+      {ps.map(p=><div key={p.id} style={{position:"absolute",left:p.x+"%",top:p.y+"%",width:p.s,height:p.s,borderRadius:"50%",
+        background:p.id%3===0?"#5BCA6B":p.id%3===1?"#4AEAB0":"#6AB2F2",opacity:0.3,
+        animation:`drift ${p.d}s ease-in-out infinite`,animationDelay:`-${p.id*1.3}s`,
+        "--dx":p.dx+"px","--dy":p.dy+"px",filter:"blur(0.5px)"}}/>)}
+    </div>;
+  };
   useEffect(() => {
     const fn = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", fn, { passive: true });
@@ -675,17 +707,25 @@ function DegenTradeLanding() {
         @keyframes sU{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
         @keyframes pulseGlow{0%,100%{opacity:.4}50%{opacity:1}}
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        @keyframes drift{0%{transform:translate(0,0) scale(1);opacity:.3}25%{opacity:.6}50%{transform:translate(var(--dx),var(--dy)) scale(1.2);opacity:.4}75%{opacity:.7}100%{transform:translate(0,0) scale(1);opacity:.3}}
+        @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        @keyframes revealUp{from{opacity:0;transform:translateY(48px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .dt-reveal{opacity:0;transform:translateY(48px) scale(0.97);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
+        .dt-reveal.visible{opacity:1;transform:translateY(0) scale(1)}
+        .dt-reveal-d1{transition-delay:0.1s}.dt-reveal-d2{transition-delay:0.2s}.dt-reveal-d3{transition-delay:0.3s}
         @keyframes phonePulse{0%,100%{box-shadow:0 0 0 0.5px rgba(255,255,255,0.06), 0 0 80px rgba(91,202,107,0.04),0 30px 100px rgba(0,0,0,0.6),0 80px 140px rgba(0,0,0,0.4)}50%{box-shadow:0 0 0 0.5px rgba(255,255,255,0.08), 0 0 100px rgba(91,202,107,0.07),0 30px 100px rgba(0,0,0,0.6),0 80px 140px rgba(0,0,0,0.4)}}
         @keyframes phoneReveal{0%{opacity:0;transform:scale(0.92) translateY(40px) rotateX(6deg)}100%{opacity:1;transform:scale(1) translateY(0) rotateX(1deg)}}
         @keyframes orb1{0%,100%{transform:translate(0,0)}33%{transform:translate(60px,-40px)}66%{transform:translate(-30px,20px)}}
         @keyframes orb2{0%,100%{transform:translate(0,0)}33%{transform:translate(-50px,60px)}66%{transform:translate(40px,-15px)}}
-        *{box-sizing:border-box;margin:0;padding:0}::-webkit-scrollbar{width:0}html{scroll-behavior:smooth}
+        *{box-sizing:border-box;margin:0;padding:0}::-webkit-scrollbar{width:0}html{scroll-behavior:smooth;scroll-padding-top:60px}
         
         /* ── MOBILE RESPONSIVE ── */
-        .dt-nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 32px;backdrop-filter:blur(20px) saturate(1.3);border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.3s}
+        .dt-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 32px;backdrop-filter:blur(20px) saturate(1.3);border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.3s}
         .dt-nav-links{display:flex;align-items:center;gap:28px}
         .dt-nav-link{color:#6C7883;text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s;white-space:nowrap}
-        .dt-hero{padding:100px 32px 48px}
+        .dt-hero{padding:120px 32px 48px}
         .dt-phone-wrap{transform:scale(1);transform-origin:top center}
         .dt-tab-bar{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;scrollbar-width:none}
         .dt-tab-bar::-webkit-scrollbar{display:none}
@@ -703,7 +743,13 @@ function DegenTradeLanding() {
           .dt-nav{padding:10px 16px}
           .dt-nav-links{gap:12px}
           .dt-nav-link{display:none}
-          .dt-hero{padding:48px 18px 24px}
+          .dt-nav-roadmap{display:inline !important}
+          .dt-nav-x{display:flex !important}
+          .dt-hero{padding:72px 18px 24px}
+          .dt-roadmap-line{left:18px !important}
+          .dt-roadmap-dot{left:18px !important}
+          .dt-roadmap-phase{justify-content:flex-end !important}
+          .dt-roadmap-card{width:calc(100% - 48px) !important;margin-left:auto}
           .dt-phone-wrap{transform:scale(0.85);margin-top:-16px;margin-bottom:-32px}
           .dt-tab-bar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;justify-content:flex-start}
           .dt-tab-fade{display:block !important}
@@ -722,7 +768,7 @@ function DegenTradeLanding() {
         }
         @media(max-width:380px){
           .dt-phone-wrap{transform:scale(0.78);margin-top:-24px;margin-bottom:-48px}
-          .dt-hero{padding:36px 12px 16px}
+          .dt-hero{padding:64px 12px 16px}
           .dt-tab-bar button{padding:6px 8px !important;font-size:9px !important}
           .dt-stats-item{padding:14px 6px}
           .dt-stats-val{font-size:20px}
@@ -757,18 +803,29 @@ function DegenTradeLanding() {
         <div style={{position:"absolute",inset:0,opacity:0.012,backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",backgroundSize:"128px 128px"}}/>
       </div>
 
+      {/* MOUSE GLOW */}
+      <div ref={glowRef} style={{position:"fixed",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(91,202,107,0.06),transparent 70%)",pointerEvents:"none",zIndex:1,transform:"translate(-50%,-50%)",transition:"left 0.15s ease-out, top 0.15s ease-out",filter:"blur(40px)"}}/>
+
+      {/* PARTICLES */}
+      <Particles/>
+
       {/* NAV */}
       <nav className="dt-nav" style={{background:scrollY>40?"rgba(5,8,9,0.92)":"rgba(5,8,9,0.3)"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}} onClick={()=>{setPage("home");window.scrollTo(0,0);}}>
           <img src={LOGO_SM} alt="" style={{width:30,height:30,borderRadius:8}}/>
           <span style={{fontWeight:800,fontSize:18,color:"#F5F5F5"}}>DegenTrade</span>
         </div>
         <div className="dt-nav-links">
-          {["Features","Stats"].map(l=><a key={l} href={"#"+l.toLowerCase()} className="dt-nav-link" onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#6C7883"}>{l}</a>)}
+          {page==="home"?["Features","Stats"].map(l=><a key={l} href={"#"+l.toLowerCase()} className="dt-nav-link" onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#6C7883"}>{l}</a>):null}
+          <a href="#" className="dt-nav-link dt-nav-roadmap" onClick={e=>{e.preventDefault();setPage(page==="roadmap"?"home":"roadmap");window.scrollTo(0,0);}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>{if(page!=="roadmap")e.target.style.color="#6C7883"}} style={page==="roadmap"?{color:"#5BCA6B"}:{}}>Roadmap</a>
+          <a href="https://x.com/DegenTradeSol" target="_blank" rel="noopener" className="dt-nav-link dt-nav-x" style={{display:"flex",alignItems:"center"}} onMouseEnter={e=>e.currentTarget.querySelector('svg').style.opacity="1"} onMouseLeave={e=>e.currentTarget.querySelector('svg').style.opacity="0.5"}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{opacity:0.5,transition:"opacity .2s"}}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
           <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",color:"#050809",padding:"9px 24px",borderRadius:12,fontSize:13,fontWeight:700,textDecoration:"none",transition:"all .2s",boxShadow:"0 2px 14px rgba(91,202,107,.2)",whiteSpace:"nowrap"}} onMouseEnter={e=>{e.target.style.transform="translateY(-1px)";e.target.style.boxShadow="0 4px 20px rgba(91,202,107,.3)";}} onMouseLeave={e=>{e.target.style.transform="translateY(0)";e.target.style.boxShadow="0 2px 14px rgba(91,202,107,.2)";}}>Start free</a>
         </div>
       </nav>
 
+      {page==="home" && <>
       {/* ── HERO: text left, phone right ── */}
       <section className="dt-hero" style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",maxWidth:1100,margin:"0 auto"}}>
         <div style={{maxWidth:600,animation:"sU 0.6s ease-out",marginBottom:40}}>
@@ -778,7 +835,7 @@ function DegenTradeLanding() {
           </div>
           <h1 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(32px,5.5vw,60px)",lineHeight:1.05,margin:"0 0 20px",letterSpacing:-2.5,padding:"0 8px"}}>
             <span style={{color:"#F5F5F5"}}>Slept through a 10x?</span><br/>
-            <span style={{background:"linear-gradient(135deg,#5BCA6B 0%,#4AEAB0 50%,#6AB2F2 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Never again.</span>
+            <span style={{background:"linear-gradient(135deg,#5BCA6B 0%,#4AEAB0 25%,#6AB2F2 50%,#4AEAB0 75%,#5BCA6B 100%)",backgroundSize:"300% 300%",animation:"gradShift 4s ease-in-out infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Never again.</span>
           </h1>
           <p style={{color:"#8A9BB0",fontSize:"clamp(14px,1.8vw,17px)",lineHeight:1.7,maxWidth:500,margin:"0 auto 32px",padding:"0 8px",fontWeight:400}}>
             Every token scanned before you buy. Bundles exposed. Your AI copilot watches your portfolio 24/7 {"—"} so you don't have to.
@@ -794,7 +851,7 @@ function DegenTradeLanding() {
       </section>
 
       {/* ── STATS BAR ── */}
-      <section id="stats" style={{position:"relative",zIndex:1,padding:"40px 24px",maxWidth:900,margin:"0 auto"}}>
+      <section id="stats" className="dt-reveal" style={{position:"relative",zIndex:1,padding:"40px 24px",maxWidth:900,margin:"0 auto"}}>
         <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:0,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",borderRadius:20,backdropFilter:"blur(12px)",overflow:"hidden"}}>
           {[
             {v:"0.8%",l:"Trading fee"},
@@ -809,8 +866,34 @@ function DegenTradeLanding() {
         </div>
       </section>
 
+      {/* ── LIVE TICKER ── */}
+      <section className="dt-reveal" style={{position:"relative",zIndex:1,overflow:"hidden",padding:"20px 0",maxWidth:1100,margin:"0 auto",maskImage:"linear-gradient(90deg,transparent,black 10%,black 90%,transparent)"}}>
+        <div style={{display:"flex",animation:"tickerScroll 30s linear infinite",width:"max-content"}}>
+          {[...Array(2)].map((_,rep)=>
+            <div key={rep} style={{display:"flex",gap:32,paddingRight:32}}>
+              {[
+                {icon:"\ud83d\udfe2",text:"BONK bought \u2014 0.5 SOL",time:"12s ago"},
+                {icon:"\ud83d\udfe1",text:"Exit Coach: WIF +247%",time:"34s ago"},
+                {icon:"\ud83d\udd35",text:"Safety scan: POPCAT \u2714\ufe0f",time:"1m ago"},
+                {icon:"\ud83d\udfe2",text:"TP hit: MYRO +85%",time:"2m ago"},
+                {icon:"\ud83d\udfe0",text:"Copy trade executed",time:"3m ago"},
+                {icon:"\ud83d\udd34",text:"RUG detected \u2014 blocked",time:"5m ago"},
+                {icon:"\ud83d\udfe2",text:"Limit buy filled: JTO",time:"6m ago"},
+                {icon:"\ud83d\udfe1",text:"Exit Coach: RENDER +142%",time:"8m ago"},
+              ].map((t,i)=>
+                <div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:10,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",whiteSpace:"nowrap",flexShrink:0}}>
+                  <span style={{fontSize:10}}>{t.icon}</span>
+                  <span style={{fontSize:12,color:"#8A9BB0",fontWeight:500}}>{t.text}</span>
+                  <span style={{fontSize:10,color:"#3A4755"}}>{t.time}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* ── EXIT COACH — CINEMATIC SECTION ── */}
-      <section style={{position:"relative",zIndex:1,padding:"100px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
+      <section className="dt-reveal" style={{position:"relative",zIndex:1,padding:"100px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
         <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(91,202,107,0.04),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
         <div style={{position:"relative"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(91,202,107,.06)",border:"1px solid rgba(91,202,107,.12)",marginBottom:28}}>
@@ -819,7 +902,7 @@ function DegenTradeLanding() {
           </div>
           <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(28px,5vw,50px)",lineHeight:1.08,margin:"0 0 20px",letterSpacing:-2}}>
             <span style={{color:"#F5F5F5"}}>Start trading with AI.</span><br/>
-            <span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Stop getting rugged.</span>
+            <span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0,#6AB2F2,#4AEAB0,#5BCA6B)",backgroundSize:"300% 300%",animation:"gradShift 4s ease-in-out infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Stop getting rugged.</span>
           </h2>
           <p style={{color:"#7B8D9E",fontSize:"clamp(15px,2vw,18px)",lineHeight:1.7,maxWidth:560,margin:"0 auto 36px",padding:"0 8px"}}>
             Real-time Telegram alerts when positions hit critical levels. Profit targets, stop losses, bundle activity {"\u2014"} all monitored 24/7 while you sleep.
@@ -839,7 +922,7 @@ function DegenTradeLanding() {
       </section>
 
       {/* ── FEATURES ── */}
-      <section id="features" className="dt-features" style={{position:"relative",zIndex:1,maxWidth:1060,margin:"0 auto"}}>
+      <section id="features" className="dt-features dt-reveal" style={{position:"relative",zIndex:1,maxWidth:1060,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",marginBottom:24}}>
             <span style={{fontSize:10.5,color:"#7B8D9E",fontWeight:600,letterSpacing:2,textTransform:"uppercase"}}>Features</span>
@@ -864,10 +947,11 @@ function DegenTradeLanding() {
             background:"linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))",
             border:"1px solid rgba(255,255,255,0.06)",
             borderRadius:20,padding:"36px 30px",transition:"all 0.5s cubic-bezier(0.16,1,0.3,1)",cursor:"default",position:"relative",overflow:"hidden",
-            backdropFilter:"blur(12px)",
+            backdropFilter:"blur(12px)",transformStyle:"preserve-3d",perspective:800,
           }}
-          onMouseEnter={e=>{e.currentTarget.style.borderColor=`${f.c1}40`;e.currentTarget.style.transform="translateY(-6px) scale(1.01)";e.currentTarget.style.boxShadow=`0 24px 60px ${f.c1}12, 0 0 0 1px ${f.c1}18, inset 0 1px 0 rgba(255,255,255,0.04)`;e.currentTarget.style.background=`linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015))`;}}
-          onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,0.06)";e.currentTarget.style.transform="translateY(0) scale(1)";e.currentTarget.style.boxShadow="none";e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))";}}>
+          onMouseMove={e=>{const r=e.currentTarget.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-0.5;const y=(e.clientY-r.top)/r.height-0.5;e.currentTarget.style.transform=`translateY(-6px) scale(1.01) rotateY(${x*8}deg) rotateX(${-y*8}deg)`;}}
+          onMouseEnter={e=>{e.currentTarget.style.borderColor=`${f.c1}40`;e.currentTarget.style.boxShadow=`0 24px 60px ${f.c1}12, 0 0 0 1px ${f.c1}18, inset 0 1px 0 rgba(255,255,255,0.04)`;e.currentTarget.style.background=`linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015))`;}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,0.06)";e.currentTarget.style.transform="translateY(0) scale(1) rotateY(0deg) rotateX(0deg)";e.currentTarget.style.boxShadow="none";e.currentTarget.style.background="linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))";}}>
             <div style={{position:"absolute",top:0,left:30,width:56,height:1.5,background:`linear-gradient(90deg,${f.c1},${f.c2}00)`,opacity:0.7}}/>
             <div style={{position:"absolute",top:-40,right:-40,width:120,height:120,borderRadius:"50%",background:`radial-gradient(circle,${f.c1}08,transparent 70%)`,filter:"blur(30px)",pointerEvents:"none"}}/>
             <div style={{width:10,height:10,borderRadius:"50%",background:`linear-gradient(135deg,${f.c1},${f.c2})`,boxShadow:`0 0 16px ${f.c1}50, 0 0 40px ${f.c1}20`,marginBottom:20}}/>
@@ -878,7 +962,7 @@ function DegenTradeLanding() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{position:"relative",zIndex:1,padding:"40px 16px 80px",textAlign:"center",maxWidth:680,margin:"0 auto"}}>
+      <section className="dt-reveal" style={{position:"relative",zIndex:1,padding:"40px 16px 80px",textAlign:"center",maxWidth:680,margin:"0 auto"}}>
         <div className="dt-cta-inner" style={{position:"relative",overflow:"hidden",borderRadius:24,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(91,202,107,0.08)",backdropFilter:"blur(12px)"}}>
           <div style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"50%",height:1,background:"linear-gradient(90deg,transparent,rgba(91,202,107,0.2),transparent)"}}/>
           <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:"clamp(22px,3.5vw,30px)",margin:"0 0 14px",letterSpacing:-0.8}}>
@@ -889,6 +973,91 @@ function DegenTradeLanding() {
           <div style={{marginTop:16,fontSize:11.5,color:"#5A6B7A",fontWeight:500}}>0.8% per trade · No subscription · Your keys, your wallet</div>
         </div>
       </section>
+      </>}
+
+      {/* ── ROADMAP PAGE ── */}
+      {page==="roadmap" && <section style={{position:"relative",zIndex:1,maxWidth:920,margin:"0 auto",padding:"100px 24px 60px"}}>
+        {/* Roadmap Hero */}
+        <div style={{textAlign:"center",marginBottom:80}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"6px 18px",borderRadius:100,background:"rgba(91,202,107,.06)",border:"1px solid rgba(91,202,107,.12)",marginBottom:28}}>
+            <div style={{width:6,height:6,borderRadius:"50%",background:"#5BCA6B",boxShadow:"0 0 12px #5BCA6B",animation:"pulseGlow 2s ease-in-out infinite"}}/>
+            <span style={{fontSize:11,color:"#5BCA6B",fontWeight:600,letterSpacing:1.5,textTransform:"uppercase"}}>Building in public</span>
+          </div>
+          <h1 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(36px,6vw,64px)",lineHeight:1.05,letterSpacing:-2.5,margin:"0 0 20px"}}>
+            <span style={{color:"#F5F5F5"}}>Where we're </span>
+            <span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>headed</span>
+          </h1>
+          <p style={{color:"#5A6B7A",fontSize:"clamp(14px,1.8vw,17px)",maxWidth:500,margin:"0 auto",lineHeight:1.7}}>Everything shipped, what's next, and the long-term vision for the smartest Solana trading bot.</p>
+        </div>
+
+        {/* Timeline */}
+        <div className="dt-roadmap-tl" style={{position:"relative"}}>
+          {/* Vertical line */}
+          <div className="dt-roadmap-line" style={{position:"absolute",left:"50%",top:0,bottom:0,width:1,background:"linear-gradient(180deg,#5BCA6B 0%,#6C8EFF 25%,#B06CFF 50%,#FF6C8E 75%,#FFB86C 100%)",opacity:.15,transform:"translateX(-50%)"}}/>
+
+          {[
+            {num:"Phase 1",title:"AI Trading Engine",sub:"Foundation — 50 active traders",color:"#5BCA6B",live:true,items:[
+              {done:true,t:"AI-powered natural language trading"},
+              {done:true,t:"Token safety scanner with bundle & sniper detection"},
+              {done:true,t:"Portfolio tracking, P&L & CSV tax export"},
+              {done:true,t:"Take-profit, stop-loss & limit orders"},
+              {done:true,t:"Copy trading — mirror any wallet"},
+              {done:true,t:"Referral system — earn 30% of fees forever"},
+              {done:true,t:"0.8% trading fee — lowest in class"},
+              {done:true,t:"Exit Coach — proactive AI alerts for all positions"},
+              {done:true,t:"Shareable P&L cards — post wins on X & Telegram"},
+              {done:true,t:"Multi-language AI (responds in your language)"},
+              {done:true,t:"10 free AI credits on signup"},
+            ]},
+            {num:"Phase 2",title:"Community & Reach",sub:"Growth — 500 active traders",color:"#6C8EFF",items:[
+              {t:"Onboarding optimization — first trade in 60 seconds"},
+              {t:"KOL partner program with fee-share dashboard"},
+              {t:"Advanced copy trading — filter by PnL & win rate"},
+              {t:"DCA orders (Dollar Cost Averaging)"},
+              {t:"Listings on DappRadar, Alchemy, CoinCodeCap"},
+            ]},
+            {num:"Phase 3",title:"Smart Money Tools",sub:"Pro Features — 2,000 traders",color:"#B06CFF",items:[
+              {t:"Exit Coach v2 — auto-sell at thresholds, trailing stop-loss"},
+              {t:"Sniper mode — auto-buy tokens matching safety criteria"},
+              {t:"Whale wallet tracker — follow smart money in real-time"},
+              {t:"Portfolio analytics dashboard (web UI)"},
+              {t:"Telegram Mini App — in-chat web UI"},
+              {t:"CoinGecko & DeFi Llama listings"},
+            ]},
+            {num:"Phase 4",title:"$DEGEN Token Launch",sub:"Utility token backed by real volume",color:"#FF6C8E",token:true},
+            {num:"Phase 5",title:"Multi-Chain & Beyond",sub:"Scale — 10,000+ traders",color:"#FFB86C",items:[
+              {t:"Base chain support (Ethereum L2)"},
+              {t:"AI strategy builder — describe it, AI runs it 24/7"},
+              {t:"Social trading leaderboard with verified P&L"},
+            ]},
+          ].map((phase,pi)=><div key={pi} className="dt-roadmap-phase" style={{position:"relative",marginBottom:72,display:"flex",justifyContent:pi%2===0?"flex-start":"flex-end"}}>
+            {/* Dot */}
+            <div className="dt-roadmap-dot" style={{position:"absolute",left:"50%",top:24,width:14,height:14,borderRadius:"50%",background:phase.color,boxShadow:`0 0 20px ${phase.color}`,transform:"translateX(-50%)",zIndex:2}}/>
+            {/* Card */}
+            <div className="dt-roadmap-card" style={{width:"calc(50% - 48px)",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:20,padding:"28px 26px",backdropFilter:"blur(16px)",transition:"all .4s cubic-bezier(.16,1,.3,1)",cursor:"default"}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor=`${phase.color}30`;e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 16px 48px rgba(0,0,0,.3)`;e.currentTarget.style.background="rgba(255,255,255,0.04)";}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,0.06)";e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="none";e.currentTarget.style.background="rgba(255,255,255,0.025)";}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+                <span style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:phase.color}}>{phase.num}</span>
+                {phase.live && <span style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(91,202,107,.1)",border:"1px solid rgba(91,202,107,.2)",borderRadius:100,padding:"3px 12px",fontSize:10,fontWeight:700,color:"#5BCA6B",letterSpacing:.5,textTransform:"uppercase"}}>
+                  <span style={{width:5,height:5,borderRadius:"50%",background:"#5BCA6B",animation:"pulseGlow 2s ease-in-out infinite"}}/>Live
+                </span>}
+              </div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:700,color:"#F5F5F5",letterSpacing:-.5,marginBottom:4}}>{phase.title}</div>
+              <div style={{fontSize:12.5,color:"#5A6B7A",marginBottom:phase.items||phase.token?18:0}}>{phase.sub}</div>
+              {phase.token && <p style={{fontSize:13.5,color:"#5A6B7A",lineHeight:1.7,fontStyle:"italic"}}>Details will be announced when the time is right. Token utility will be directly tied to the DegenTrade ecosystem.</p>}
+              {phase.items && <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {phase.items.map((item,ii)=><div key={ii} style={{display:"flex",alignItems:"flex-start",gap:9}}>
+                  <div style={{flexShrink:0,width:18,height:18,borderRadius:5,display:"flex",alignItems:"center",justifyContent:"center",fontSize:item.done?10:7,fontWeight:700,marginTop:1,
+                    background:item.done?"rgba(91,202,107,.12)":"rgba(255,255,255,0.04)",
+                    color:item.done?"#5BCA6B":"#5A6B7A"}}>{item.done?"✓":"◇"}</div>
+                  <span style={{fontSize:13.5,lineHeight:1.5,color:item.done?"#E8ECF1":"#7B8D9E"}}>{item.t}</span>
+                </div>)}
+              </div>}
+            </div>
+          </div>)}
+        </div>
+      </section>}
 
       {/* FOOTER */}
       <footer style={{position:"relative",zIndex:1,borderTop:"1px solid rgba(255,255,255,0.04)",padding:"32px 20px 24px"}}>
@@ -906,6 +1075,7 @@ function DegenTradeLanding() {
               <div style={{display:"flex",flexDirection:"column",gap:7}}>
                 <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{color:"#4A5568",textDecoration:"none",fontSize:12.5,fontWeight:500,transition:"color .2s"}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#4A5568"}>Telegram bot</a>
                 <a href="#features" style={{color:"#4A5568",textDecoration:"none",fontSize:12.5,fontWeight:500,transition:"color .2s"}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#4A5568"}>Features</a>
+                <a href="#" onClick={e=>{e.preventDefault();setPage("roadmap");window.scrollTo(0,0);}} style={{color:"#4A5568",textDecoration:"none",fontSize:12.5,fontWeight:500,transition:"color .2s",cursor:"pointer"}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#4A5568"}>Roadmap</a>
                 <a href="#" onClick={e=>{e.preventDefault();setLegal("fees")}} style={{color:"#4A5568",textDecoration:"none",fontSize:12.5,fontWeight:500,transition:"color .2s",cursor:"pointer"}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#4A5568"}>Fees</a>
               </div>
             </div>
@@ -921,6 +1091,7 @@ function DegenTradeLanding() {
               <div style={{fontSize:11,color:"#5A6B7A",textTransform:"uppercase",letterSpacing:1.5,fontWeight:700,marginBottom:10}}>Community</div>
               <div style={{display:"flex",flexDirection:"column",gap:7}}>
                 <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{color:"#4A5568",textDecoration:"none",fontSize:12.5,fontWeight:500,transition:"color .2s"}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#4A5568"}>Telegram</a>
+                <a href="https://x.com/DegenTradeSol" target="_blank" rel="noopener" style={{color:"#4A5568",textDecoration:"none",fontSize:12.5,fontWeight:500,transition:"color .2s"}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#4A5568"}>X (Twitter)</a>
               </div>
             </div>
           </div>
