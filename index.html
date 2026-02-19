@@ -117,10 +117,21 @@ const scenes = [
             { title: "Holders", lines: ["\u26a0\ufe0f Top 10: *38.7%*", "\u274c Largest: *12.4%* (`7xPm...2kTz`)", "\u2705 Dev: *0.0%*"] },
             { title: "Bundles", lines: ["\u274c Bundled Supply: *18.6%*", "\u274c Clusters: *4*", "\u274c Fresh Wallets: *67%*", "\u26a0\ufe0f Snipers: *2*"] },
           ],
+          clusters: [
+            { id: 2, time: "20:34:29", status: "FORWARDED", wallets: [
+              { addr: "BM4n...C6nB" },
+              { addr: "88EY...BHwm", sub: "2bxL...KKYY" },
+              { addr: "JDzV...axDe" },
+            ], forwards: ["2bxL...KKYY"] },
+            { id: 1, time: "20:34:12", status: "HOLDING", wallets: [
+              { addr: "7xPm...2kTz" },
+              { addr: "Ax9R...eF3m" },
+            ] },
+          ],
           flags: [
-            "\u274c 4 wallet clusters hold 18.6% \u2014 coordinated buying detected",
-            "\u274c 67% of top holders are fresh wallets (<24h old)",
-            "\u26a0\ufe0f 2 snipers bought within first 3 blocks",
+            "\u274c 4 wallet clusters hold 18.6% \u2014 coordinated buying",
+            "\u274c 67% fresh wallets among top holders",
+            "\u26a0\ufe0f Cluster 2 forwarded tokens to single wallet",
             "\u26a0\ufe0f LP unlocked \u2014 dev can pull liquidity",
           ],
           warnings: ["\u26a0\ufe0f Bundle strength: 4/5 \u2014 high coordination", "\u26a0\ufe0f MCap/Liq ratio: 26x \u2014 thin liquidity"],
@@ -276,6 +287,7 @@ function BotContent({ content }) {
       <ScoreBar score={h.score}/>
       {content.sections.map((s,i)=><div key={i}><div style={{color:TG.textDim,margin:"8px 0 3px",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"} {s.title} {"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"}</div>{s.lines.map((l,j)=><div key={j} style={{fontSize:12.5}}><StyledText text={l}/></div>)}</div>)}
       {content.flags&&<div><div style={{color:TG.textDim,margin:"8px 0 3px",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"} Risk Flags {"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"}</div>{content.flags.map((f,i)=><div key={i} style={{fontSize:12.5}}>{f}</div>)}</div>}
+      {content.clusters&&<div><div style={{color:TG.textDim,margin:"8px 0 3px",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"} Clusters {"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"}</div>{content.clusters.map((cl,ci)=><div key={ci} style={{marginBottom:6}}><div style={{fontSize:12,fontWeight:600}}>Cluster {cl.id} {"\u2014"} <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,color:TG.textDim}}>{cl.time}</span></div>{cl.wallets.map((w,wi)=>{const last=wi===cl.wallets.length-1;return <div key={wi}><div style={{fontSize:11.5,fontFamily:"'JetBrains Mono',monospace",color:"#A0AEC0"}}>{last?"\u2514":"\u251C"} <span style={{color:TG.accent}}>{w.addr}</span></div>{w.sub&&<div style={{fontSize:11.5,fontFamily:"'JetBrains Mono',monospace",color:"#A0AEC0",paddingLeft:12}}>{"\u2514"} {w.sub}</div>}</div>})}{cl.status==="FORWARDED"&&cl.forwards&&<div style={{fontSize:11.5,marginTop:2}}>{"\u2192"} {"\ud83d\udce4"} <span style={{fontWeight:600,color:TG.yellow}}>FORWARDED</span>{cl.forwards.map((fw,fi)=><div key={fi} style={{fontSize:11,fontFamily:"'JetBrains Mono',monospace",paddingLeft:16,color:TG.accent}}>{"\u21b3"} {fw}</div>)}</div>}{cl.status==="HOLDING"&&<div style={{fontSize:11.5,marginTop:2}}>{"\u2192"} {"\ud83d\udfe2"} <span style={{fontWeight:500,color:TG.green}}>HOLDING</span></div>}</div>)}</div>}
       {content.warnings&&<div><div style={{color:TG.textDim,margin:"8px 0 3px",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"} Warnings {"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"}</div>{content.warnings.map((w,i)=><div key={i} style={{fontSize:12.5}}>{w}</div>)}</div>}
       {content.hardFail&&<div><div style={{color:TG.textDim,margin:"8px 0 3px",fontSize:11,fontFamily:"'JetBrains Mono',monospace"}}>{"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"} {"\ud83d\udeab"} HARD FAIL {"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"}</div><div style={{fontWeight:700,fontSize:12.5}}>Trade blocked {"\u2014"} critical risk detected:</div>{content.hardFail.reasons.map((r,i)=><div key={i} style={{fontSize:12.5}}>{r}</div>)}</div>}
       <div style={{margin:"10px 0 0",fontSize:13}}><StyledText text={content.verdict}/></div>
@@ -426,6 +438,7 @@ function DegenTradeLanding() {
   const [scrollY, setScrollY] = useState(0);
   const [legal, setLegal] = useState(null);
   const [page, setPage] = useState("home");
+  const [menuOpen, setMenuOpen] = useState(false);
   const glowRef = useRef(null);
 
   // Scroll reveal observer
@@ -739,12 +752,23 @@ function DegenTradeLanding() {
         .dt-legal-modal{max-width:680px;max-height:85vh}
         .dt-legal-body{padding:24px 28px}
         
+        .dt-hamburger{display:none;flex-direction:column;gap:4.5px;cursor:pointer;padding:6px;z-index:101}
+        .dt-hamburger span{display:block;width:20px;height:2px;background:#A0AEC0;border-radius:2px;transition:all .3s}
+        .dt-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px)}
+        .dt-hamburger.open span:nth-child(2){opacity:0}
+        .dt-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px)}
+        .dt-mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(5,8,9,0.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;pointer-events:none;transition:opacity .3s}
+        .dt-mobile-menu.open{opacity:1;pointer-events:auto}
+        .dt-mobile-menu a{color:#A0AEC0;text-decoration:none;font-size:18px;font-weight:600;transition:color .2s;letter-spacing:0.3px}
+        .dt-mobile-menu a:hover{color:#F5F5F5}
         @media(max-width:768px){
           .dt-nav{padding:10px 16px}
           .dt-nav-links{gap:12px}
           .dt-nav-link{display:none}
-          .dt-nav-roadmap{display:inline !important}
-          .dt-nav-x{display:flex !important}
+          .dt-nav-roadmap{display:none !important}
+          .dt-nav-x{display:none !important}
+          .dt-hamburger{display:flex}
+          .dt-nav-cta{display:none}
           .dt-hero{padding:72px 18px 24px}
           .dt-roadmap-line{left:18px !important}
           .dt-roadmap-dot{left:18px !important}
@@ -759,6 +783,7 @@ function DegenTradeLanding() {
           .dt-stats-val{font-size:22px}
           .dt-features{padding:48px 16px}
           .dt-features-grid{grid-template-columns:1fr}
+          .dt-bundle-pills{grid-template-columns:1fr !important}
           .dt-cta-inner{padding:36px 20px}
           .dt-footer-cols{gap:20px;grid-template-columns:1fr 1fr;row-gap:24px}
           .dt-footer-desc{grid-column:1/-1}
@@ -816,14 +841,27 @@ function DegenTradeLanding() {
           <span style={{fontWeight:800,fontSize:18,color:"#F5F5F5"}}>DegenTrade</span>
         </div>
         <div className="dt-nav-links">
-          {page==="home"?["Features","Stats"].map(l=><a key={l} href={"#"+l.toLowerCase()} className="dt-nav-link" onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#6C7883"}>{l}</a>):null}
+          {page==="home"?["Features","Bundle Detection","Exit Coach","Stats"].map(l=><a key={l} href={"#"+(l==="Bundle Detection"?"bundledetection":l==="Exit Coach"?"exitcoach":l.toLowerCase())} className="dt-nav-link" onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#6C7883"}>{l}</a>):null}
           <a href="#" className="dt-nav-link dt-nav-roadmap" onClick={e=>{e.preventDefault();setPage(page==="roadmap"?"home":"roadmap");window.scrollTo(0,0);}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>{if(page!=="roadmap")e.target.style.color="#6C7883"}} style={page==="roadmap"?{color:"#5BCA6B"}:{}}>Roadmap</a>
           <a href="https://x.com/DegenTradeSol" target="_blank" rel="noopener" className="dt-nav-link dt-nav-x" style={{display:"flex",alignItems:"center"}} onMouseEnter={e=>e.currentTarget.querySelector('svg').style.opacity="1"} onMouseLeave={e=>e.currentTarget.querySelector('svg').style.opacity="0.5"}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{opacity:0.5,transition:"opacity .2s"}}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
-          <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",color:"#050809",padding:"9px 24px",borderRadius:12,fontSize:13,fontWeight:700,textDecoration:"none",transition:"all .2s",boxShadow:"0 2px 14px rgba(91,202,107,.2)",whiteSpace:"nowrap"}} onMouseEnter={e=>{e.target.style.transform="translateY(-1px)";e.target.style.boxShadow="0 4px 20px rgba(91,202,107,.3)";}} onMouseLeave={e=>{e.target.style.transform="translateY(0)";e.target.style.boxShadow="0 2px 14px rgba(91,202,107,.2)";}}>Start free</a>
+          <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" className="dt-nav-cta" style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",color:"#050809",padding:"9px 24px",borderRadius:12,fontSize:13,fontWeight:700,textDecoration:"none",transition:"all .2s",boxShadow:"0 2px 14px rgba(91,202,107,.2)",whiteSpace:"nowrap"}} onMouseEnter={e=>{e.target.style.transform="translateY(-1px)";e.target.style.boxShadow="0 4px 20px rgba(91,202,107,.3)";}} onMouseLeave={e=>{e.target.style.transform="translateY(0)";e.target.style.boxShadow="0 2px 14px rgba(91,202,107,.2)";}}>Start free</a>
+          <div className={`dt-hamburger${menuOpen?" open":""}`} onClick={()=>setMenuOpen(!menuOpen)}>
+            <span/><span/><span/>
+          </div>
         </div>
       </nav>
+
+      {/* MOBILE MENU */}
+      <div className={`dt-mobile-menu${menuOpen?" open":""}`}>
+        {page==="home"?["Features","Bundle Detection","Exit Coach","Stats"].map(l=><a key={l} href={"#"+(l==="Bundle Detection"?"bundledetection":l==="Exit Coach"?"exitcoach":l.toLowerCase())} onClick={()=>setMenuOpen(false)}>{l}</a>):null}
+        <a href="#" onClick={e=>{e.preventDefault();setPage(page==="roadmap"?"home":"roadmap");setMenuOpen(false);window.scrollTo(0,0);}} style={page==="roadmap"?{color:"#5BCA6B"}:{}}>Roadmap</a>
+        <a href="https://x.com/DegenTradeSol" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",color:"#050809",padding:"14px 40px",borderRadius:14,fontSize:15,fontWeight:700,marginTop:8,boxShadow:"0 2px 14px rgba(91,202,107,.2)"}}>Start free</a>
+      </div>
 
       {page==="home" && <>
       {/* ── HERO: text left, phone right ── */}
@@ -893,7 +931,7 @@ function DegenTradeLanding() {
       </section>
 
       {/* ── EXIT COACH — CINEMATIC SECTION ── */}
-      <section className="dt-reveal" style={{position:"relative",zIndex:1,padding:"100px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
+      <section id="exitcoach" className="dt-reveal" style={{position:"relative",zIndex:1,padding:"100px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
         <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(91,202,107,0.04),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
         <div style={{position:"relative"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(91,202,107,.06)",border:"1px solid rgba(91,202,107,.12)",marginBottom:28}}>
@@ -921,6 +959,61 @@ function DegenTradeLanding() {
         </div>
       </section>
 
+      {/* ── BUNDLE DETECTION — CINEMATIC SECTION ── */}
+      <section id="bundledetection" className="dt-reveal" style={{position:"relative",zIndex:1,padding:"80px 24px",maxWidth:900,margin:"0 auto"}}>
+        <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(106,178,242,0.04),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
+        <div style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"center"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(106,178,242,.06)",border:"1px solid rgba(106,178,242,.12)",marginBottom:28}}>
+            <div style={{width:5,height:5,borderRadius:"50%",background:"#6AB2F2",boxShadow:"0 0 8px #6AB2F2",animation:"pulseGlow 2s ease-in-out infinite"}}/>
+            <span style={{fontSize:12,color:"#6AB2F2",fontWeight:600}}>Bundle Detection</span>
+          </div>
+          <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(28px,5vw,50px)",lineHeight:1.08,margin:"0 0 20px",letterSpacing:-2,textAlign:"center"}}>
+            <span style={{color:"#F5F5F5"}}>See the wallets </span>
+            <span style={{background:"linear-gradient(135deg,#6AB2F2,#4AEAB0,#5BCA6B)",backgroundSize:"300% 300%",animation:"gradShift 4s ease-in-out infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>they try to hide.</span>
+          </h2>
+          <p style={{color:"#7B8D9E",fontSize:"clamp(15px,2vw,18px)",lineHeight:1.7,maxWidth:580,margin:"0 auto 44px",padding:"0 8px",textAlign:"center"}}>
+            Our scanner traces wallet clusters, forwarding patterns, and fresh wallet farms {"\u2014"} before you buy.
+          </p>
+
+          {/* Cluster visualization demo */}
+          <div style={{width:"100%",maxWidth:580,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:20,padding:"28px 28px 24px",backdropFilter:"blur(12px)",marginBottom:40}}>
+            <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:12,lineHeight:1.8,color:"#A0AEC0"}}>
+              <div style={{color:TG.textDim,fontSize:11,marginBottom:8}}>{"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"} Bundle Analysis {"\u2500\u2500\u2500\u2500\u2500\u2500\u2500"}</div>
+              <div style={{marginBottom:10}}>
+                <div style={{fontWeight:600,color:"#F5F5F5",fontSize:12.5}}>Cluster 1 {"\u2014"} Same Funding Source <span style={{color:TG.textDim,fontWeight:400}}>20:34:12</span></div>
+                <div>{"\u251C"} <span style={{color:TG.accent}}>7xPm...2kTz</span> <span style={{fontSize:10,color:TG.textDim}}>12.4%</span></div>
+                <div>{"\u2514"} <span style={{color:TG.accent}}>Ax9R...eF3m</span> <span style={{fontSize:10,color:TG.textDim}}>5.6%</span></div>
+                <div style={{marginTop:3}}>{"\u2192"} {"\ud83d\udfe2"} <span style={{fontWeight:500,color:TG.green}}>HOLDING</span></div>
+              </div>
+              <div>
+                <div style={{fontWeight:600,color:"#F5F5F5",fontSize:12.5}}>Cluster 2 {"\u2014"} Bought Together <span style={{color:TG.textDim,fontWeight:400}}>20:34:29</span></div>
+                <div>{"\u251C"} <span style={{color:TG.accent}}>BM4n...C6nB</span> <span style={{fontSize:10,color:TG.textDim}}>4.2%</span></div>
+                <div>{"\u251C"} <span style={{color:TG.accent}}>88EY...BHwm</span> <span style={{fontSize:10,color:TG.textDim}}>3.1%</span></div>
+                <div style={{paddingLeft:14}}>{"\u2514"} <span style={{color:"#8A9BB0"}}>2bxL...KKYY</span></div>
+                <div>{"\u2514"} <span style={{color:TG.accent}}>JDzV...axDe</span> <span style={{fontSize:10,color:TG.textDim}}>2.8%</span></div>
+                <div style={{marginTop:3}}>{"\u2192"} {"\ud83d\udce4"} <span style={{fontWeight:600,color:TG.yellow}}>FORWARDED</span></div>
+                <div style={{paddingLeft:18,color:TG.accent}}>{"\u21b3"} <span style={{textDecoration:"underline",textDecorationColor:"rgba(106,178,242,0.3)"}}>2bxL...KKYY</span> <span style={{fontSize:10,color:TG.textDim}}>solscan {"\u2197"}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="dt-bundle-pills" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,width:"100%",maxWidth:580}}>
+            {[
+              {text:"Wallet cluster mapping",desc:"Traces shared funding sources & coordinated buys"},
+              {text:"Forward detection",desc:"Tracks token forwarding to hidden collection wallets"},
+              {text:"Fresh wallet scoring",desc:"Flags wallets created <24h before token launch"},
+              {text:"Sniper tracking",desc:"Detects bots buying in the first blocks"},
+            ].map((f,i)=><div key={i} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"14px 18px",borderRadius:14,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",backdropFilter:"blur(12px)",transition:"all 0.3s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(106,178,242,0.15)";e.currentTarget.style.background="rgba(106,178,242,0.03)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,0.05)";e.currentTarget.style.background="rgba(255,255,255,0.02)";}}>
+              <div style={{width:6,height:6,borderRadius:"50%",background:"#6AB2F2",boxShadow:"0 0 8px rgba(106,178,242,0.4)",flexShrink:0,marginTop:6}}/>
+              <div>
+                <div style={{fontSize:13.5,color:"#A0AEC0",fontWeight:500,letterSpacing:0.1}}>{f.text}</div>
+                <div style={{fontSize:11.5,color:"#4A5568",lineHeight:1.5,marginTop:3}}>{f.desc}</div>
+              </div>
+            </div>)}
+          </div>
+        </div>
+      </section>
+
       {/* ── FEATURES ── */}
       <section id="features" className="dt-features dt-reveal" style={{position:"relative",zIndex:1,maxWidth:1060,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
@@ -935,7 +1028,7 @@ function DegenTradeLanding() {
         <div className="dt-features-grid">
           {[
             {t:"Safety scanner",d:"Automatic contract checks on every token you paste. Mint authority, freeze, LP locks, holder concentration — all verified in under a second.",c1:"#5BCA6B",c2:"#4AEAB0"},
-            {t:"Bundle detection",d:"Expose coordinated wallet clusters, snipers, and fresh wallet patterns before they can dump on you.",c1:"#6AB2F2",c2:"#4AEAB0"},
+            {t:"Bundle detection",d:"Expose coordinated wallet clusters, token forwarding patterns, fresh wallet farms, and snipers — with clickable Solscan links to verify every connection.",c1:"#6AB2F2",c2:"#4AEAB0"},
             {t:"Lightning-fast trades",d:"Jupiter-powered swaps with custom slippage. Buy directly from scan results with one tap.",c1:"#5BCA6B",c2:"#6AB2F2"},
             {t:"DegenAI copilot",d:"Your personal AI trading assistant. It sees your portfolio, executes trades, sets TP/SL — all in natural language. Just say \"how am I doing?\" or \"buy BONK for 1 SOL\".",c1:"#6AB2F2",c2:"#A78BFA"},
             {t:"Orders & TP/SL",d:"Set take profit, stop loss, and limit buy orders. Automated execution by our 24/7 worker — never miss a target.",c1:"#5BCA6B",c2:"#4AEAB0"},
