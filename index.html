@@ -930,6 +930,108 @@ function DegenTradeLanding() {
         </div>
       </section>
 
+      {/* ── SPEAK CONFIRM DONE — AI TRADING FLOW ── */}
+      <section className="dt-reveal" style={{position:"relative",zIndex:1,padding:"100px 24px 80px",maxWidth:800,margin:"0 auto"}}>
+        <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(74,234,176,0.03),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
+        <div style={{position:"relative",textAlign:"center",marginBottom:56}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(91,202,107,.06)",border:"1px solid rgba(91,202,107,.12)",marginBottom:28}}>
+            <div style={{width:5,height:5,borderRadius:"50%",background:"#5BCA6B",boxShadow:"0 0 8px #5BCA6B",animation:"pulseGlow 2s ease-in-out infinite"}}/>
+            <span style={{fontSize:12,color:"#5BCA6B",fontWeight:600}}>Conversational AI Trading</span>
+          </div>
+          <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(28px,4.5vw,48px)",lineHeight:1.1,margin:"0 0 16px",letterSpacing:-1.5,color:"#F5F5F5"}}>
+            Speak. Confirm. <span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Done.</span>
+          </h2>
+          <p style={{color:"#8A9BB0",fontSize:"clamp(14px,1.6vw,17px)",lineHeight:1.7,maxWidth:520,margin:"0 auto",fontWeight:400}}>
+            Trade Solana in your language.<br/>Buy, set TP & SL in one sentence — English, German, Spanish, Italian, whatever you speak. AI prepares. You confirm. Done.
+          </p>
+        </div>
+
+        {/* 3-Step Flow */}
+        <div style={{position:"relative",display:"flex",flexDirection:"column",gap:24}}>
+
+          {/* STEP 1 — User Message */}
+          <div style={{display:"flex",alignItems:"flex-start",gap:16}}>
+            <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",background:"linear-gradient(135deg,#1E293B,#334155)",border:"1px solid rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#8A9BB0"}}>You</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:10,color:"#5A6B7A",fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>Step 1 — You say</div>
+              <div style={{background:"rgba(91,202,107,0.04)",border:"1px solid rgba(91,202,107,0.10)",borderRadius:"16px 16px 16px 4px",padding:"16px 20px",maxWidth:440}}>
+                <p style={{margin:0,color:"#E2E8F0",fontSize:14,fontWeight:500,lineHeight:1.6,fontFamily:"'JetBrains Mono',monospace"}}>
+                  Buy 0.3 SOL BONK, TP 50% at 2x, SL -30%
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Connector line */}
+          <div style={{marginLeft:18,width:1,height:16,background:"linear-gradient(to bottom,rgba(91,202,107,0.15),rgba(91,202,107,0.04))"}}/>
+
+          {/* STEP 2 — Bot Preview Card */}
+          <div style={{display:"flex",alignItems:"flex-start",gap:16}}>
+            <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",background:"linear-gradient(135deg,#0F3D1C,#164A25)",border:"1px solid rgba(91,202,107,0.15)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🤖</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:10,color:"#5A6B7A",fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>Step 2 — Bot previews</div>
+              <div style={{background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:16,padding:"20px 24px",maxWidth:440,backdropFilter:"blur(8px)"}}>
+                {/* Card header */}
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:24,height:24,borderRadius:"50%",background:"linear-gradient(135deg,#F59E0B,#F97316)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>🐕</div>
+                    <span style={{color:"#F5F5F5",fontSize:14,fontWeight:700}}>BONK</span>
+                  </div>
+                  <span style={{fontSize:11,color:"#5A6B7A",fontWeight:500}}>Solana · SPL</span>
+                </div>
+
+                {/* Trade details grid */}
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px 16px",marginBottom:16}}>
+                  {[
+                    {label:"Amount",value:"0.3 SOL"},
+                    {label:"Take Profit",value:"+100% (Sell 50%)",color:"#5BCA6B"},
+                    {label:"Stop Loss",value:"-30% (Sell 100%)",color:"#EF4444"},
+                    {label:"Est. Output",value:"~312,400 BONK"},
+                  ].map((item,i)=>(
+                    <div key={i}>
+                      <div style={{fontSize:10,color:"#5A6B7A",fontWeight:600,letterSpacing:1,textTransform:"uppercase",marginBottom:3}}>{item.label}</div>
+                      <div style={{fontSize:13,color:item.color||"#CBD5E1",fontWeight:600}}>{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Risk score */}
+                <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",borderRadius:10,background:"rgba(91,202,107,0.04)",border:"1px solid rgba(91,202,107,0.08)",marginBottom:16}}>
+                  <span style={{fontSize:10,color:"#5A6B7A",fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>Risk Score</span>
+                  <div style={{display:"flex",gap:4,marginLeft:"auto"}}>
+                    {["LOW","MED","HIGH"].map((level,i)=>(
+                      <span key={i} style={{fontSize:9,fontWeight:700,letterSpacing:0.5,padding:"3px 8px",borderRadius:6,background:i===0?"rgba(91,202,107,0.12)":"rgba(255,255,255,0.03)",color:i===0?"#5BCA6B":"#3A4755",border:i===0?"1px solid rgba(91,202,107,0.2)":"1px solid rgba(255,255,255,0.04)"}}>{level}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Confirm button */}
+                <div style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",borderRadius:12,padding:"12px 24px",textAlign:"center",cursor:"default",boxShadow:"0 4px 20px rgba(91,202,107,0.2)"}}>
+                  <span style={{color:"#050809",fontSize:13,fontWeight:700,letterSpacing:0.5}}>✓ Confirm & Execute</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Connector line */}
+          <div style={{marginLeft:18,width:1,height:16,background:"linear-gradient(to bottom,rgba(91,202,107,0.15),rgba(91,202,107,0.04))"}}/>
+
+          {/* STEP 3 — Done */}
+          <div style={{display:"flex",alignItems:"flex-start",gap:16}}>
+            <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",background:"linear-gradient(135deg,#0F3D1C,#164A25)",border:"1px solid rgba(91,202,107,0.15)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>✅</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:10,color:"#5A6B7A",fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>Step 3 — Done</div>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(91,202,107,0.04)",border:"1px solid rgba(91,202,107,0.10)",borderRadius:12,padding:"12px 18px"}}>
+                <div style={{width:6,height:6,borderRadius:"50%",background:"#5BCA6B",boxShadow:"0 0 8px #5BCA6B"}}/>
+                <span style={{color:"#CBD5E1",fontSize:13,fontWeight:500}}>Transaction sent.</span>
+                <a href="#" onClick={e=>e.preventDefault()} style={{color:"#4AEAB0",fontSize:13,fontWeight:600,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:4}}>View on Solscan <span style={{fontSize:11}}>→</span></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* ── EXIT COACH — CINEMATIC SECTION ── */}
       <section id="exitcoach" className="dt-reveal" style={{position:"relative",zIndex:1,padding:"100px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
         <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(91,202,107,0.04),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
