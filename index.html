@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DegenTrade — Solana Trading Bot</title><style>body{margin:0;padding:0;background:#050809}</style></head><body>
+<title>DegenTrade — Solana & Base Trading Bot</title><style>body{margin:0;padding:0;background:#050809}</style></head><body>
 <div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -465,7 +465,7 @@ function DegenTradeLanding() {
     }))).current;
     return <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,overflow:"hidden"}}>
       {ps.map(p=><div key={p.id} style={{position:"absolute",left:p.x+"%",top:p.y+"%",width:p.s,height:p.s,borderRadius:"50%",
-        background:p.id%3===0?"#5BCA6B":p.id%3===1?"#4AEAB0":"#6AB2F2",opacity:0.3,
+        background:p.id%4===0?"#5BCA6B":p.id%4===1?"#4AEAB0":p.id%4===2?"#6AB2F2":"#0052FF",opacity:0.3,
         animation:`drift ${p.d}s ease-in-out infinite`,animationDelay:`-${p.id*1.3}s`,
         "--dx":p.dx+"px","--dy":p.dy+"px",filter:"blur(0.5px)"}}/>)}
     </div>;
@@ -489,7 +489,7 @@ function DegenTradeLanding() {
       title: "Privacy policy",
       body: <div>
         <P>Last updated: February 2026</P>
-        <P>DegenTrade ("we", "our", "the bot") is a Telegram-based trading bot for the Solana blockchain. This policy explains what data we collect, how we use it, and your rights.</P>
+        <P>DegenTrade ("we", "our", "the bot") is a Telegram-based trading bot for the Solana and Base blockchains. This policy explains what data we collect, how we use it, and your rights.</P>
 
         <S>1. Data we collect</S>
         <P>When you use DegenTrade, we collect and store:</P>
@@ -527,9 +527,12 @@ function DegenTradeLanding() {
         <S>6. Third-party services</S>
         <P>DegenTrade interacts with the following third-party services to provide its functionality:</P>
         <Li>Telegram Bot API — for the chat interface</Li>
-        <Li>Jupiter aggregator — for trade execution and price quotes</Li>
+        <Li>Jupiter aggregator — for Solana trade execution and price quotes</Li>
+        <Li>0x Protocol — for Base chain trade execution and price quotes</Li>
         <Li>Helius — for Solana RPC access and transaction data</Li>
-        <Li>Solana blockchain — all trades are public on-chain transactions</Li>
+        <Li>Alchemy — for Base chain RPC access and transaction data</Li>
+        <Li>Solana blockchain — all Solana trades are public on-chain transactions</Li>
+        <Li>Base blockchain — all Base trades are public on-chain transactions</Li>
         <Li>AI language models — for processing DegenAI natural language requests (messages are sent to the AI provider for processing)</Li>
         <P>We do not control these services and their own privacy policies apply to their processing of data.</P>
 
@@ -547,7 +550,7 @@ function DegenTradeLanding() {
         <P>By using DegenTrade ("the bot", "the service"), you agree to these terms. If you do not agree, do not use the service.</P>
 
         <S>1. Service description</S>
-        <P>DegenTrade is a Telegram-based tool that allows you to trade tokens on the Solana blockchain. The bot provides token scanning, trade execution via Jupiter aggregator, portfolio tracking, P&L calculation, and tax report generation.</P>
+        <P>DegenTrade is a Telegram-based tool that allows you to trade tokens on the Solana and Base blockchains. The bot provides token scanning, trade execution via Jupiter aggregator (Solana) and 0x protocol (Base), portfolio tracking, P&L calculation, and tax report generation.</P>
 
         <S>2. Not financial advice</S>
         <P>DegenTrade is a tool, not a financial advisor. Nothing provided by the bot — including safety scores, risk assessments, bundle detection results, or P&L data — constitutes financial, investment, tax, or legal advice. All trading decisions are your own. You should consult qualified professionals for financial and tax advice.</P>
@@ -575,7 +578,7 @@ function DegenTradeLanding() {
         <P>DegenTrade offers a copy trading feature that allows you to automatically mirror trades from wallets you choose to follow. By using copy trading, you acknowledge that you are responsible for selecting wallets to follow and configuring your own position sizes and risk limits. DegenTrade does not vet, endorse, or recommend any wallet for copy trading. Copy trading involves the same risks as manual trading and may result in losses.</P>
 
         <S>9. Self-custody</S>
-        <P>DegenTrade generates and manages wallets on your behalf. While private keys are encrypted and stored securely, you are responsible for exporting and backing up your private key. DegenTrade is not a custodian. If you lose access to your Telegram account, contact support for account recovery options. We strongly recommend not storing large amounts of SOL in your bot wallet.</P>
+        <P>DegenTrade generates and manages wallets on your behalf for each supported chain. While private keys are encrypted and stored securely, you are responsible for exporting and backing up your private keys. DegenTrade is not a custodian. If you lose access to your Telegram account, contact support for account recovery options. We strongly recommend not storing large amounts of SOL or ETH in your bot wallets.</P>
 
         <S>10. Limitation of liability</S>
         <P>The service is provided "as is" without warranties of any kind, express or implied. DegenTrade is not liable for:</P>
@@ -615,7 +618,7 @@ function DegenTradeLanding() {
         <P>Please read this disclaimer carefully before using DegenTrade.</P>
 
         <S>Cryptocurrency trading risk</S>
-        <P>Trading cryptocurrencies, including tokens on the Solana blockchain, involves substantial risk of loss. The value of cryptocurrencies is highly volatile and can drop to zero. You should only trade with funds you can afford to lose entirely.</P>
+        <P>Trading cryptocurrencies, including tokens on the Solana and Base blockchains, involves substantial risk of loss. The value of cryptocurrencies is highly volatile and can drop to zero. You should only trade with funds you can afford to lose entirely.</P>
 
         <S>Memecoin and small-cap token risk</S>
         <P>Many tokens traded through DegenTrade are small-cap, newly launched, or meme tokens. These carry extreme risks including but not limited to:</P>
@@ -825,6 +828,7 @@ function DegenTradeLanding() {
       <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0}}>
         <div style={{position:"absolute",top:"0%",right:"5%",width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(91,202,107,.035),transparent 60%)",filter:"blur(80px)",animation:"orb1 25s ease-in-out infinite"}}/>
         <div style={{position:"absolute",bottom:"5%",left:"0%",width:450,height:450,borderRadius:"50%",background:"radial-gradient(circle,rgba(106,178,242,.025),transparent 60%)",filter:"blur(80px)",animation:"orb2 30s ease-in-out infinite"}}/>
+        <div style={{position:"absolute",top:"40%",left:"50%",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(0,82,255,.02),transparent 60%)",filter:"blur(80px)",animation:"orb1 35s ease-in-out infinite reverse"}}/>
         <div style={{position:"absolute",inset:0,opacity:0.012,backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",backgroundSize:"128px 128px"}}/>
       </div>
 
@@ -841,7 +845,7 @@ function DegenTradeLanding() {
           <span style={{fontWeight:800,fontSize:18,color:"#F5F5F5"}}>DegenTrade</span>
         </div>
         <div className="dt-nav-links">
-          {page==="home"?["Features","Bundle Detection","Exit Coach","Stats"].map(l=><a key={l} href={"#"+(l==="Bundle Detection"?"bundledetection":l==="Exit Coach"?"exitcoach":l.toLowerCase())} className="dt-nav-link" onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#6C7883"}>{l}</a>):null}
+          {page==="home"?["Features","Bundle Detection","Multichain","Exit Coach","Stats"].map(l=><a key={l} href={"#"+(l==="Bundle Detection"?"bundledetection":l==="Exit Coach"?"exitcoach":l==="Multichain"?"multichain":l.toLowerCase())} className="dt-nav-link" onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>e.target.style.color="#6C7883"}>{l}</a>):null}
           <a href="#" className="dt-nav-link dt-nav-roadmap" onClick={e=>{e.preventDefault();setPage(page==="roadmap"?"home":"roadmap");window.scrollTo(0,0);}} onMouseEnter={e=>e.target.style.color="#F5F5F5"} onMouseLeave={e=>{if(page!=="roadmap")e.target.style.color="#6C7883"}} style={page==="roadmap"?{color:"#5BCA6B"}:{}}>Roadmap</a>
           <a href="https://x.com/DegenTradeSol" target="_blank" rel="noopener" className="dt-nav-link dt-nav-x" style={{display:"flex",alignItems:"center"}} onMouseEnter={e=>e.currentTarget.querySelector('svg').style.opacity="1"} onMouseLeave={e=>e.currentTarget.querySelector('svg').style.opacity="0.5"}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{opacity:0.5,transition:"opacity .2s"}}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -855,7 +859,7 @@ function DegenTradeLanding() {
 
       {/* MOBILE MENU */}
       <div className={`dt-mobile-menu${menuOpen?" open":""}`}>
-        {page==="home"?["Features","Bundle Detection","Exit Coach","Stats"].map(l=><a key={l} href={"#"+(l==="Bundle Detection"?"bundledetection":l==="Exit Coach"?"exitcoach":l.toLowerCase())} onClick={()=>setMenuOpen(false)}>{l}</a>):null}
+        {page==="home"?["Features","Bundle Detection","Multichain","Exit Coach","Stats"].map(l=><a key={l} href={"#"+(l==="Bundle Detection"?"bundledetection":l==="Exit Coach"?"exitcoach":l==="Multichain"?"multichain":l.toLowerCase())} onClick={()=>setMenuOpen(false)}>{l}</a>):null}
         <a href="#" onClick={e=>{e.preventDefault();setPage(page==="roadmap"?"home":"roadmap");setMenuOpen(false);window.scrollTo(0,0);}} style={page==="roadmap"?{color:"#5BCA6B"}:{}}>Roadmap</a>
         <a href="https://x.com/DegenTradeSol" target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -869,14 +873,26 @@ function DegenTradeLanding() {
         <div style={{maxWidth:600,animation:"sU 0.6s ease-out",marginBottom:40}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(91,202,107,.06)",border:"1px solid rgba(91,202,107,.12)",marginBottom:24}}>
             <div style={{width:5,height:5,borderRadius:"50%",background:"#5BCA6B",boxShadow:"0 0 8px #5BCA6B",animation:"pulseGlow 2s ease-in-out infinite"}}/>
-            <span style={{fontSize:10.5,color:"#5BCA6B",fontWeight:600,letterSpacing:2,textTransform:"uppercase"}}>Solana Trading Intelligence</span>
+            <span style={{fontSize:10.5,color:"#5BCA6B",fontWeight:600,letterSpacing:2,textTransform:"uppercase"}}>Multichain Trading Intelligence</span>
+          </div>
+          {/* Chain pills */}
+          <div style={{display:"flex",gap:8,justifyContent:"center",marginBottom:20}}>
+            <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:100,background:"linear-gradient(135deg,rgba(156,106,255,0.08),rgba(0,240,180,0.06))",border:"1px solid rgba(156,106,255,0.15)",backdropFilter:"blur(8px)"}}>
+              <svg width="14" height="14" viewBox="0 0 128 128" fill="none"><defs><linearGradient id="sol-g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#9945FF"/><stop offset="50%" stopColor="#14F195"/><stop offset="100%" stopColor="#00C2FF"/></linearGradient></defs><path d="M25.5 97.7l15.4-15.4c.6-.6 1.3-.9 2.1-.9h76.7c1.3 0 2 1.6.9 2.5l-15.4 15.4c-.6.6-1.3.9-2.1.9H26.4c-1.3 0-2-1.6-.9-2.5z" fill="url(#sol-g)"/><path d="M25.5 30.3l15.4-15.4c.6-.6 1.3-.9 2.1-.9h76.7c1.3 0 2 1.6.9 2.5L105.2 32c-.6.6-1.3.9-2.1.9H26.4c-1.3 0-2-1.6-.9-2.5z" fill="url(#sol-g)"/><path d="M105.2 63.7L89.8 48.3c-.6-.6-1.3-.9-2.1-.9H10.9c-1.3 0-2 1.6-.9 2.5l15.4 15.4c.6.6 1.3.9 2.1.9h76.7c1.3 0 2-1.6 .9-2.5z" fill="url(#sol-g)"/></svg>
+              <span style={{fontSize:11,fontWeight:700,color:"#B8A0FF",letterSpacing:0.5}}>Solana</span>
+            </div>
+            <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:100,background:"linear-gradient(135deg,rgba(0,82,255,0.08),rgba(0,82,255,0.04))",border:"1px solid rgba(0,82,255,0.18)",backdropFilter:"blur(8px)",animation:"sU 0.8s ease-out 0.4s both"}}>
+              <svg width="14" height="14" viewBox="0 0 111 111" fill="none"><path d="M54.921 0c30.326 0 54.921 24.595 54.921 54.921 0 30.327-24.595 54.922-54.921 54.922C24.595 109.843 0 85.248 0 54.92 0 24.596 24.595 0 54.921 0z" fill="#0052FF"/><path d="M55.027 19.72c-19.38 0-35.121 15.741-35.121 35.121 0 19.38 15.741 35.122 35.121 35.122 16.694 0 30.683-11.68 34.216-27.308H72.376c-3.072 8.25-11.036 14.142-20.349 14.142-12.036 0-21.811-9.775-21.811-21.811s9.775-21.81 21.811-21.81c9.313 0 17.277 5.891 20.349 14.141h16.867C85.71 31.4 71.721 19.72 55.027 19.72z" fill="#fff"/></svg>
+              <span style={{fontSize:11,fontWeight:700,color:"#4D94FF",letterSpacing:0.5}}>Base</span>
+              <span style={{fontSize:8,fontWeight:800,padding:"1px 5px",borderRadius:4,background:"rgba(0,82,255,0.15)",color:"#4D94FF",letterSpacing:1,textTransform:"uppercase"}}>New</span>
+            </div>
           </div>
           <h1 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(32px,5.5vw,60px)",lineHeight:1.05,margin:"0 0 20px",letterSpacing:-2.5,padding:"0 8px"}}>
             <span style={{color:"#F5F5F5"}}>Slept through a 10x?</span><br/>
             <span style={{background:"linear-gradient(135deg,#5BCA6B 0%,#4AEAB0 25%,#6AB2F2 50%,#4AEAB0 75%,#5BCA6B 100%)",backgroundSize:"300% 300%",animation:"gradShift 4s ease-in-out infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Never again.</span>
           </h1>
           <p style={{color:"#8A9BB0",fontSize:"clamp(14px,1.8vw,17px)",lineHeight:1.7,maxWidth:500,margin:"0 auto 32px",padding:"0 8px",fontWeight:400}}>
-            Every token scanned before you buy. Bundles exposed. Your AI copilot watches your portfolio 24/7 {"—"} so you don't have to.
+            Every token scanned before you buy. Bundles exposed. Your AI copilot watches your portfolio 24/7 on Solana {"&"} Base {"—"} so you don't have to.
           </p>
           <div style={{display:"flex",gap:14,justifyContent:"center",alignItems:"center",flexWrap:"wrap"}}>
             <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",color:"#050809",padding:"15px 40px",borderRadius:14,fontSize:15,fontWeight:700,textDecoration:"none",boxShadow:"0 4px 24px rgba(91,202,107,.25)",transition:"all .3s cubic-bezier(0.16,1,0.3,1)",letterSpacing:0.3}} onMouseEnter={e=>{e.target.style.transform="translateY(-2px)";e.target.style.boxShadow="0 8px 32px rgba(91,202,107,.35)";}} onMouseLeave={e=>{e.target.style.transform="translateY(0)";e.target.style.boxShadow="0 4px 24px rgba(91,202,107,.25)";}}>Start Trading — Free</a>
@@ -893,11 +909,12 @@ function DegenTradeLanding() {
         <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:0,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",borderRadius:20,backdropFilter:"blur(12px)",overflow:"hidden"}}>
           {[
             {v:"0.8%",l:"Trading fee"},
-            {v:"\ud83e\udde0",l:"AI Copilot"},
-            {v:"\ud83d\udd12",l:"Contract scan"},
+            {v:"⛓",l:"Solana + Base"},
+            {v:"🧠",l:"AI Copilot"},
+            {v:"🔒",l:"Contract scan"},
             {v:"24/7",l:"Exit Coach"},
             {v:"30%",l:"Referral share"},
-          ].map((s,i)=><div key={i} className="dt-stats-item" style={{borderRight:i<4?"1px solid rgba(255,255,255,0.04)":"none"}}>
+          ].map((s,i)=><div key={i} className="dt-stats-item" style={{borderRight:i<5?"1px solid rgba(255,255,255,0.04)":"none"}}>
             <div className="dt-stats-val" style={{fontWeight:800,color:"#F5F5F5",lineHeight:1}}>{s.v}</div>
             <div style={{fontSize:12,color:"#5A6B7A",marginTop:6,textTransform:"uppercase",letterSpacing:1.5,fontWeight:600}}>{s.l}</div>
           </div>)}
@@ -913,10 +930,13 @@ function DegenTradeLanding() {
                 {icon:"\ud83d\udfe2",text:"BONK bought \u2014 0.5 SOL",time:"12s ago"},
                 {icon:"\ud83d\udfe1",text:"Exit Coach: WIF +247%",time:"34s ago"},
                 {icon:"\ud83d\udd35",text:"Safety scan: POPCAT \u2714\ufe0f",time:"1m ago"},
+                {icon:"🔵",text:"Base: BRETT bought — 0.02 ETH",time:"1m ago"},
                 {icon:"\ud83d\udfe2",text:"TP hit: MYRO +85%",time:"2m ago"},
+                {icon:"🔵",text:"Base: DEGEN scan ✔️",time:"2m ago"},
                 {icon:"\ud83d\udfe0",text:"Copy trade executed",time:"3m ago"},
                 {icon:"\ud83d\udd34",text:"RUG detected \u2014 blocked",time:"5m ago"},
                 {icon:"\ud83d\udfe2",text:"Limit buy filled: JTO",time:"6m ago"},
+                {icon:"🔵",text:"Base: TP hit TOSHI +120%",time:"7m ago"},
                 {icon:"\ud83d\udfe1",text:"Exit Coach: RENDER +142%",time:"8m ago"},
               ].map((t,i)=>
                 <div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:10,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",whiteSpace:"nowrap",flexShrink:0}}>
@@ -942,7 +962,7 @@ function DegenTradeLanding() {
             Speak. Confirm. <span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Done.</span>
           </h2>
           <p style={{color:"#8A9BB0",fontSize:"clamp(14px,1.6vw,17px)",lineHeight:1.7,maxWidth:520,margin:"0 auto",fontWeight:400}}>
-            Trade Solana in your language.<br/>Buy, set TP & SL in one sentence — English, German, Spanish, Italian, whatever you speak. AI prepares. You confirm. Done.
+            Trade Solana & Base in your language.<br/>Buy, set TP & SL in one sentence — English, German, Spanish, Italian, whatever you speak. AI prepares. You confirm. Done.
           </p>
         </div>
 
@@ -977,7 +997,7 @@ function DegenTradeLanding() {
                     <div style={{width:24,height:24,borderRadius:"50%",background:"linear-gradient(135deg,#F59E0B,#F97316)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>🐕</div>
                     <span style={{color:"#F5F5F5",fontSize:14,fontWeight:700}}>BONK</span>
                   </div>
-                  <span style={{fontSize:11,color:"#5A6B7A",fontWeight:500}}>Solana · SPL</span>
+                  <span style={{fontSize:11,color:"#B8A0FF",fontWeight:500,display:"flex",alignItems:"center",gap:4}}><svg width="10" height="10" viewBox="0 0 128 128" fill="none"><defs><linearGradient id="sol-g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#9945FF"/><stop offset="50%" stopColor="#14F195"/><stop offset="100%" stopColor="#00C2FF"/></linearGradient></defs><path d="M25.5 97.7l15.4-15.4c.6-.6 1.3-.9 2.1-.9h76.7c1.3 0 2 1.6.9 2.5l-15.4 15.4c-.6.6-1.3.9-2.1.9H26.4c-1.3 0-2-1.6-.9-2.5z" fill="url(#sol-g2)"/><path d="M25.5 30.3l15.4-15.4c.6-.6 1.3-.9 2.1-.9h76.7c1.3 0 2 1.6.9 2.5L105.2 32c-.6.6-1.3.9-2.1.9H26.4c-1.3 0-2-1.6-.9-2.5z" fill="url(#sol-g2)"/><path d="M105.2 63.7L89.8 48.3c-.6-.6-1.3-.9-2.1-.9H10.9c-1.3 0-2 1.6-.9 2.5l15.4 15.4c.6.6 1.3.9 2.1.9h76.7c1.3 0 2-1.6 .9-2.5z" fill="url(#sol-g2)"/></svg> Solana · SPL</span>
                 </div>
 
                 {/* Trade details grid */}
@@ -1032,6 +1052,64 @@ function DegenTradeLanding() {
         </div>
       </section>
 
+      {/* ── MULTICHAIN — CHAIN SWITCH SHOWCASE ── */}
+      <section id="multichain" className="dt-reveal" style={{position:"relative",zIndex:1,padding:"80px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
+        <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(0,82,255,0.04),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
+        <div style={{position:"relative"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:7,padding:"5px 14px",borderRadius:20,background:"rgba(0,82,255,.06)",border:"1px solid rgba(0,82,255,.15)",marginBottom:28}}>
+            <div style={{width:5,height:5,borderRadius:"50%",background:"#4D94FF",boxShadow:"0 0 8px #4D94FF",animation:"pulseGlow 2s ease-in-out infinite"}}/>
+            <span style={{fontSize:12,color:"#4D94FF",fontWeight:600}}>Multichain Trading</span>
+          </div>
+          <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:"clamp(28px,5vw,50px)",lineHeight:1.08,margin:"0 0 20px",letterSpacing:-2}}>
+            <span style={{color:"#F5F5F5"}}>One bot. </span>
+            <span style={{background:"linear-gradient(135deg,#9945FF,#14F195,#0052FF)",backgroundSize:"300% 300%",animation:"gradShift 4s ease-in-out infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Two chains.</span>
+          </h2>
+          <p style={{color:"#7B8D9E",fontSize:"clamp(15px,2vw,18px)",lineHeight:1.7,maxWidth:560,margin:"0 auto 44px",padding:"0 8px"}}>
+            Switch between Solana and Base with one command. Separate wallets, unified AI, cross-chain portfolio tracking.
+          </p>
+
+          {/* Chain comparison cards */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,maxWidth:580,margin:"0 auto"}}>
+            {/* Solana Card */}
+            <div style={{background:"linear-gradient(135deg,rgba(153,69,255,0.06),rgba(20,241,149,0.04))",border:"1px solid rgba(153,69,255,0.12)",borderRadius:20,padding:"28px 22px",textAlign:"left",transition:"all 0.4s",cursor:"default"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(153,69,255,0.25)";e.currentTarget.style.transform="translateY(-4px)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(153,69,255,0.12)";e.currentTarget.style.transform="translateY(0)";}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+                <svg width="20" height="20" viewBox="0 0 128 128" fill="none"><defs><linearGradient id="sol-card" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#9945FF"/><stop offset="50%" stopColor="#14F195"/><stop offset="100%" stopColor="#00C2FF"/></linearGradient></defs><path d="M25.5 97.7l15.4-15.4c.6-.6 1.3-.9 2.1-.9h76.7c1.3 0 2 1.6.9 2.5l-15.4 15.4c-.6.6-1.3.9-2.1.9H26.4c-1.3 0-2-1.6-.9-2.5z" fill="url(#sol-card)"/><path d="M25.5 30.3l15.4-15.4c.6-.6 1.3-.9 2.1-.9h76.7c1.3 0 2 1.6.9 2.5L105.2 32c-.6.6-1.3.9-2.1.9H26.4c-1.3 0-2-1.6-.9-2.5z" fill="url(#sol-card)"/><path d="M105.2 63.7L89.8 48.3c-.6-.6-1.3-.9-2.1-.9H10.9c-1.3 0-2 1.6-.9 2.5l15.4 15.4c.6.6 1.3.9 2.1.9h76.7c1.3 0 2-1.6 .9-2.5z" fill="url(#sol-card)"/></svg>
+                <span style={{fontSize:16,fontWeight:700,color:"#F5F5F5"}}>Solana</span>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {["Jupiter aggregator","SPL tokens","Sub-second finality","Helius RPC"].map((item,i)=><div key={i} style={{display:"flex",alignItems:"center",gap:8}}>
+                  <div style={{width:4,height:4,borderRadius:"50%",background:"#14F195",flexShrink:0}}/>
+                  <span style={{fontSize:12.5,color:"#8A9BB0"}}>{item}</span>
+                </div>)}
+              </div>
+            </div>
+            {/* Base Card */}
+            <div style={{background:"linear-gradient(135deg,rgba(0,82,255,0.06),rgba(0,82,255,0.03))",border:"1px solid rgba(0,82,255,0.12)",borderRadius:20,padding:"28px 22px",textAlign:"left",transition:"all 0.4s",cursor:"default"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(0,82,255,0.25)";e.currentTarget.style.transform="translateY(-4px)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(0,82,255,0.12)";e.currentTarget.style.transform="translateY(0)";}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+                <svg width="20" height="20" viewBox="0 0 111 111" fill="none"><path d="M54.921 0c30.326 0 54.921 24.595 54.921 54.921 0 30.327-24.595 54.922-54.921 54.922C24.595 109.843 0 85.248 0 54.92 0 24.596 24.595 0 54.921 0z" fill="#0052FF"/><path d="M55.027 19.72c-19.38 0-35.121 15.741-35.121 35.121 0 19.38 15.741 35.122 35.121 35.122 16.694 0 30.683-11.68 34.216-27.308H72.376c-3.072 8.25-11.036 14.142-20.349 14.142-12.036 0-21.811-9.775-21.811-21.811s9.775-21.81 21.811-21.81c9.313 0 17.277 5.891 20.349 14.141h16.867C85.71 31.4 71.721 19.72 55.027 19.72z" fill="#fff"/></svg>
+                <span style={{fontSize:16,fontWeight:700,color:"#F5F5F5"}}>Base</span>
+                <span style={{fontSize:8,fontWeight:800,padding:"2px 6px",borderRadius:4,background:"rgba(0,82,255,0.15)",color:"#4D94FF",letterSpacing:1,textTransform:"uppercase"}}>New</span>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {["0x Protocol swaps","ERC-20 tokens","Low gas fees","Alchemy RPC"].map((item,i)=><div key={i} style={{display:"flex",alignItems:"center",gap:8}}>
+                  <div style={{width:4,height:4,borderRadius:"50%",background:"#4D94FF",flexShrink:0}}/>
+                  <span style={{fontSize:12.5,color:"#8A9BB0"}}>{item}</span>
+                </div>)}
+              </div>
+            </div>
+          </div>
+
+          {/* Command demo */}
+          <div style={{marginTop:32,display:"inline-flex",alignItems:"center",gap:10,padding:"12px 20px",borderRadius:12,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.06)",fontFamily:"'JetBrains Mono',monospace",fontSize:13}}>
+            <span style={{color:"#5A6B7A"}}>/switch</span>
+            <span style={{color:"#5BCA6B"}}>solana</span>
+            <span style={{color:"#3A4755"}}>{"→"}</span>
+            <span style={{color:"#5A6B7A"}}>/switch</span>
+            <span style={{color:"#4D94FF"}}>base</span>
+          </div>
+        </div>
+      </section>
+
       {/* ── EXIT COACH — CINEMATIC SECTION ── */}
       <section id="exitcoach" className="dt-reveal" style={{position:"relative",zIndex:1,padding:"100px 24px",textAlign:"center",maxWidth:800,margin:"0 auto"}}>
         <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(91,202,107,0.04),transparent 60%)",filter:"blur(80px)",pointerEvents:"none"}}/>
@@ -1045,7 +1123,7 @@ function DegenTradeLanding() {
             <span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0,#6AB2F2,#4AEAB0,#5BCA6B)",backgroundSize:"300% 300%",animation:"gradShift 4s ease-in-out infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Stop getting rugged.</span>
           </h2>
           <p style={{color:"#7B8D9E",fontSize:"clamp(15px,2vw,18px)",lineHeight:1.7,maxWidth:560,margin:"0 auto 36px",padding:"0 8px"}}>
-            Real-time Telegram alerts when positions hit critical levels. Profit targets, stop losses, bundle activity {"\u2014"} all monitored 24/7 while you sleep.
+            Real-time Telegram alerts when positions hit critical levels. Profit targets, stop losses, bundle activity {"\u2014"} all monitored 24/7 across Solana & Base while you sleep.
           </p>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,maxWidth:520,margin:"0 auto"}}>
             {[
@@ -1125,18 +1203,19 @@ function DegenTradeLanding() {
           <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:"clamp(24px,3.5vw,42px)",margin:"0 0 16px",letterSpacing:-1.5}}>
             <span style={{color:"#F5F5F5"}}>Everything a degen needs.</span><br/><span style={{background:"linear-gradient(135deg,#5BCA6B,#4AEAB0,#6AB2F2)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Nothing you don't.</span>
           </h2>
-          <p style={{color:"#7B8D9E",fontSize:15.5,maxWidth:500,margin:"0 auto",lineHeight:1.65,padding:"0 8px"}}>Safety scanner, bundle detection, AI assistant, automated orders, and copy trading — all accessible directly in Telegram.</p>
+          <p style={{color:"#7B8D9E",fontSize:15.5,maxWidth:500,margin:"0 auto",lineHeight:1.65,padding:"0 8px"}}>Safety scanner, bundle detection, AI assistant, automated orders, and copy trading — on Solana & Base, all accessible directly in Telegram.</p>
         </div>
         <div className="dt-features-grid">
           {[
-            {t:"Safety scanner",d:"Automatic contract checks on every token you paste. Mint authority, freeze, LP locks, holder concentration — all verified in under a second.",c1:"#5BCA6B",c2:"#4AEAB0"},
-            {t:"Bundle detection",d:"Expose coordinated wallet clusters, token forwarding patterns, fresh wallet farms, and snipers — with clickable Solscan links to verify every connection.",c1:"#6AB2F2",c2:"#4AEAB0"},
-            {t:"Lightning-fast trades",d:"Jupiter-powered swaps with custom slippage. Buy directly from scan results with one tap.",c1:"#5BCA6B",c2:"#6AB2F2"},
-            {t:"DegenAI copilot",d:"Your personal AI trading assistant. It sees your portfolio, executes trades, sets TP/SL — all in natural language. Just say \"how am I doing?\" or \"buy BONK for 1 SOL\".",c1:"#6AB2F2",c2:"#A78BFA"},
-            {t:"Orders & TP/SL",d:"Set take profit, stop loss, and limit buy orders. Automated execution by our 24/7 worker — never miss a target.",c1:"#5BCA6B",c2:"#4AEAB0"},
-            {t:"Live P&L tracking",d:"Real-time profit and loss across all your positions with on-chain wallet sync. Know exactly where you stand.",c1:"#6AB2F2",c2:"#4AEAB0"},
+            {t:"Safety scanner",d:"Automatic contract checks on every token you paste. Mint authority, freeze, LP locks, holder concentration — all verified in under a second on both Solana & Base.",c1:"#5BCA6B",c2:"#4AEAB0"},
+            {t:"Bundle detection",d:"Expose coordinated wallet clusters, token forwarding patterns, fresh wallet farms, and snipers — with clickable explorer links to verify every connection.",c1:"#6AB2F2",c2:"#4AEAB0"},
+            {t:"Lightning-fast trades",d:"Jupiter-powered Solana swaps & 0x-powered Base swaps with custom slippage. Buy directly from scan results with one tap.",c1:"#5BCA6B",c2:"#6AB2F2"},
+            {t:"DegenAI copilot",d:"Your personal AI trading assistant across chains. It sees your portfolio, executes trades, sets TP/SL — all in natural language. Just say \"how am I doing?\" or \"buy BRETT for 0.01 ETH on Base\".",c1:"#6AB2F2",c2:"#A78BFA"},
+            {t:"Orders & TP/SL",d:"Set take profit, stop loss, and limit buy orders on any chain. Automated execution by our 24/7 worker — never miss a target.",c1:"#5BCA6B",c2:"#4AEAB0"},
+            {t:"Live P&L tracking",d:"Real-time profit and loss across all your positions on Solana & Base with on-chain wallet sync. Know exactly where you stand.",c1:"#6AB2F2",c2:"#4AEAB0"},
             {t:"Copy trading",d:"Follow top wallets and automatically mirror their trades. Set your own position sizes and risk limits.",c1:"#4AEAB0",c2:"#5BCA6B"},
-            {t:"FIFO tax export",d:"Full wallet scan with FIFO calculation and CSV export. Compatible with any jurisdiction.",c1:"#6AB2F2",c2:"#A78BFA"},
+            {t:"Multichain support",d:"Switch between Solana and Base with one command. Separate wallets per chain, unified portfolio view, and cross-chain P&L tracking.",c1:"#0052FF",c2:"#4D94FF"},
+            {t:"FIFO tax export",d:"Full wallet scan with FIFO calculation and CSV export across both chains. Compatible with any jurisdiction.",c1:"#6AB2F2",c2:"#A78BFA"},
             {t:"30% referral share",d:"Share your link, earn 30% of trading fees from every user you bring in. Passive income, on-chain.",c1:"#5BCA6B",c2:"#6AB2F2"},
           ].map((f,i)=><div key={i} style={{
             background:"linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))",
@@ -1163,9 +1242,9 @@ function DegenTradeLanding() {
           <h2 style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:"clamp(22px,3.5vw,30px)",margin:"0 0 14px",letterSpacing:-0.8}}>
             Your edge starts here.
           </h2>
-          <p style={{color:"#7B8D9E",fontSize:15,margin:"0 auto 28px",lineHeight:1.7,maxWidth:460}}>AI-powered token scanning, natural language trading, and a 24/7 Exit Coach that watches your bags while you sleep. Free to start. No subscription.</p>
+          <p style={{color:"#7B8D9E",fontSize:15,margin:"0 auto 28px",lineHeight:1.7,maxWidth:460}}>AI-powered token scanning on Solana & Base, natural language trading, and a 24/7 Exit Coach that watches your bags while you sleep. Free to start. No subscription.</p>
           <a href="https://t.me/DegenTradeSol_Bot" target="_blank" rel="noopener" style={{display:"inline-block",background:"linear-gradient(135deg,#5BCA6B,#4AEAB0)",color:"#050809",padding:"16px 48px",borderRadius:14,fontSize:15,fontWeight:700,textDecoration:"none",boxShadow:"0 3px 20px rgba(91,202,107,.3)",transition:"all .25s"}} onMouseEnter={e=>{e.target.style.transform="translateY(-2px)";e.target.style.boxShadow="0 6px 28px rgba(91,202,107,.4)";}} onMouseLeave={e=>{e.target.style.transform="translateY(0)";e.target.style.boxShadow="0 3px 20px rgba(91,202,107,.3)";}}>Start Trading — Free</a>
-          <div style={{marginTop:16,fontSize:11.5,color:"#5A6B7A",fontWeight:500}}>0.8% per trade · No subscription · Your keys, your wallet</div>
+          <div style={{marginTop:16,fontSize:11.5,color:"#5A6B7A",fontWeight:500}}>0.8% per trade · Solana & Base · No subscription · Your keys, your wallet</div>
         </div>
       </section>
       </>}
@@ -1220,10 +1299,11 @@ function DegenTradeLanding() {
               {t:"CoinGecko & DeFi Llama listings"},
             ]},
             {num:"Phase 4",title:"$DEGEN Token Launch",sub:"Utility token backed by real volume",color:"#FF6C8E",token:true},
-            {num:"Phase 5",title:"Multi-Chain & Beyond",sub:"Scale — 10,000+ traders",color:"#FFB86C",items:[
-              {t:"Base chain support (Ethereum L2)"},
+            {num:"Phase 5",title:"Multi-Chain & Beyond",sub:"Scale — 10,000+ traders",color:"#FFB86C",live:true,items:[
+              {done:true,t:"Base chain support (Ethereum L2)"},
               {t:"AI strategy builder — describe it, AI runs it 24/7"},
               {t:"Social trading leaderboard with verified P&L"},
+              {t:"More chains: Ethereum, Arbitrum, BNB Chain"},
             ]},
           ].map((phase,pi)=><div key={pi} className="dt-roadmap-phase" style={{position:"relative",marginBottom:72,display:"flex",justifyContent:pi%2===0?"flex-start":"flex-end"}}>
             {/* Dot */}
@@ -1263,7 +1343,7 @@ function DegenTradeLanding() {
                 <img src={LOGO_SM} alt="" style={{width:22,height:22,borderRadius:5,opacity:0.6}}/>
                 <span style={{fontWeight:700,fontSize:14,color:"#F5F5F5"}}>DegenTrade</span>
               </div>
-              <p style={{fontSize:12.5,color:"#4A5568",lineHeight:1.6,maxWidth:260}}>AI-powered Solana trading bot with safety scanner, bundle detection, natural language trading, P&L tracking, and FIFO tax export.</p>
+              <p style={{fontSize:12.5,color:"#4A5568",lineHeight:1.6,maxWidth:260}}>AI-powered multichain trading bot for Solana & Base with safety scanner, bundle detection, natural language trading, P&L tracking, and FIFO tax export.</p>
             </div>
             <div style={{flex:"0 0 auto"}}>
               <div style={{fontSize:11,color:"#5A6B7A",textTransform:"uppercase",letterSpacing:1.5,fontWeight:700,marginBottom:10}}>Product</div>
@@ -1292,7 +1372,7 @@ function DegenTradeLanding() {
           </div>
           <div className="dt-footer-bottom" style={{borderTop:"1px solid rgba(255,255,255,0.04)",paddingTop:16,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
             <span style={{fontSize:11,color:"#2D3748"}}>{"\u00a9"} 2026 DegenTrade. All rights reserved.</span>
-            <span style={{fontSize:11,color:"#2D3748"}}>Trading cryptocurrencies involves significant risk of loss. DegenTrade is not a financial advisor. Past performance does not indicate future results. DYOR.</span>
+            <span style={{fontSize:11,color:"#2D3748"}}>Trading cryptocurrencies involves significant risk of loss. DegenTrade is not a financial advisor. Past performance does not indicate future results. Supports Solana & Base. DYOR.</span>
           </div>
         </div>
       </footer>
